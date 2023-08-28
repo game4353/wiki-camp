@@ -1,18 +1,22 @@
-import { usePapaParse } from "react-papaparse";
+import useSWR from 'swr'
 
-export async function readTsv (file: string): Promise<Record<string, string>[]> {
-  const { readRemoteFile } = usePapaParse();
-  const url = `https://raw.githubusercontent.com/game4353/camp-data/main/data/tsv/${file}.tsv`
-  return new Promise((resolve, reject) => {
-    readRemoteFile(url, {
-      complete: res => {
-        if (res.data.length > 0) resolve(res.data as any)
-        else reject(res.errors)
-      },
-      download: true,
-      header: true
-    })
+//@ts-ignore
+const fetcher = (...args) => fetch(...args).then(res => 
+  new Promise((resolve, reject) => {
+    res.json().then(obj => {
+      resolve(JSON.parse(obj.message))
+    }).catch(reject)
   })
+)
+
+export function useUser (id: number) {
+  const { data, error, isLoading } = useSWR(`/api/staticdata`, fetcher)
+ 
+  return {
+    cards: data as Card[],
+    isLoading,
+    isError: error
+  }
 }
 
 function str2num (str: string): number {
@@ -130,13 +134,13 @@ class CardCampProperty {
     }
   }
 }
-export async function readCard(): Promise<Card[]> {
-  const data = await readTsv('Card')
-  return data.filter(o => o.id !== '').map(o => new Card(o))
-}
+// export async function readCard(): Promise<Card[]> {
+//   const data = await readTsv('Card')
+//   return data.filter(o => o.id !== '').map(o => new Card(o))
+// }
 
 
-export async function readCardCampProperty(): Promise<CardCampProperty[]> {
-  const data = await readTsv('CardCampProperty')
-  return data.filter(o => o.card_id !== '').map(o => new CardCampProperty(o))
-}
+// export async function readCardCampProperty(): Promise<CardCampProperty[]> {
+//   const data = await readTsv('CardCampProperty')
+//   return data.filter(o => o.card_id !== '').map(o => new CardCampProperty(o))
+// }
