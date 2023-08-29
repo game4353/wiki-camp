@@ -1,17 +1,11 @@
 import useSWR from 'swr'
 
 //@ts-ignore
-const fetcher = (...args) => fetch(...args).then(res => 
-  new Promise((resolve, reject) => {
-    res.json().then(obj => {
-      resolve(JSON.parse(obj.message))
-    }).catch(reject)
-  })
-)
+const fetcher = (...args) => fetch(...args).then(res => res.json())
 
 export function useUser (id: number) {
-  const { data, error, isLoading } = useSWR(`/api/staticdata`, fetcher)
- 
+  const { data, error, isLoading } = useSWR(`/api/ja/card`, fetcher)
+
   return {
     cards: data as Card[],
     isLoading,
@@ -38,13 +32,13 @@ export class Card {
   open_date: string
   constructor (obj: Record<string, string>) {
     try {
-      this.id = (obj['id'])
-      this.member_id = (obj['member_id'])
-      this.costume_id = (obj['costume_id'])
-      this.clothes_id = (obj['clothes_id'])
-      this.name_prefix_text_id = (obj['name_prefix_text_id'])
-      this.rarity = (obj['rarity'])
-      this.level_growth_id = (obj['level_growth_id'])
+      this.id = obj['id']
+      this.member_id = obj['member_id']
+      this.costume_id = obj['costume_id']
+      this.clothes_id = obj['clothes_id']
+      this.name_prefix_text_id = obj['name_prefix_text_id']
+      this.rarity = obj['rarity']
+      this.level_growth_id = obj['level_growth_id']
       this.description = obj['description']
       this.open_date = obj['open_date']
     } catch (e) {
@@ -91,46 +85,70 @@ class CardCampProperty {
   level_growth_group_id: number
   rank_growth_group_id: number
 
-  constructor(obj: Record<string, string>) {
+  constructor (obj: Record<string, string>) {
     try {
-      this.card_id = str2num(obj['card_id']);
-      this.camp_action_type = str2num(obj['camp_action_type']);
-      this.relationship = str2num(obj['relationship']);
-      this.satisfaction = str2num(obj['satisfaction']);
-      this.comfortableness = str2num(obj['comfortableness']);
-      this.warmth = str2num(obj['warmth']);
-      this.healing = str2num(obj['healing']);
-      this.hotness = str2num(obj['hotness']);
-      this.coldness = str2num(obj['coldness']);
-      this.sporty = str2num(obj['sporty']);
-      this.relaxing = str2num(obj['relaxing']);
-      this.playing = str2num(obj['playing']);
-      this.cooking = str2num(obj['cooking']);
-      this.camp_skill_group_id_slot1 = str2num(obj['camp_skill_group_id_slot1']);
-      this.camp_skill_level_slot1 = str2num(obj['camp_skill_level_slot1']);
-      this.camp_skill_group_id_slot2 = str2num(obj['camp_skill_group_id_slot2']);
-      this.camp_skill_level_slot2 = str2num(obj['camp_skill_level_slot2']);
-      this.camp_skill_group_id_slot3 = str2num(obj['camp_skill_group_id_slot3']);
-      this.camp_skill_level_slot3 = str2num(obj['camp_skill_level_slot3']);
-      this.camp_support_effect_group_id_slot1 = str2num(obj['camp_support_effect_group_id_slot1']);
-      this.camp_support_effect_level_slot1 = str2num(obj['camp_support_effect_level_slot1']);
-      this.camp_support_effect_group_id_slot2 = str2num(obj['camp_support_effect_group_id_slot2']);
-      this.camp_support_effect_level_slot2 = str2num(obj['camp_support_effect_level_slot2']);
-      this.camp_support_effect_group_id_slot3 = str2num(obj['camp_support_effect_group_id_slot3']);
-      this.camp_support_effect_level_slot3 = str2num(obj['camp_support_effect_level_slot3']);
-      this.camp_support_effect_group_id_slot4 = str2num(obj['camp_support_effect_group_id_slot4']);
-      this.camp_support_effect_level_slot4 = str2num(obj['camp_support_effect_level_slot4']);
-      this.camp_support_effect_group_id_slot5 = str2num(obj['camp_support_effect_group_id_slot5']);
-      this.camp_support_effect_level_slot5 = str2num(obj['camp_support_effect_level_slot5']);
-      this.camp_support_effect_group_id_slot6 = str2num(obj['camp_support_effect_group_id_slot6']);
-      this.camp_support_effect_level_slot6 = str2num(obj['camp_support_effect_level_slot6']);
-      this.camp_turn_event_id_slot1 = str2num(obj['camp_turn_event_id_slot1']);
-      this.camp_turn_event_id_slot2 = str2num(obj['camp_turn_event_id_slot2']);
-      this.camp_turn_event_id_slot3 = str2num(obj['camp_turn_event_id_slot3']);
-      this.level_growth_group_id = str2num(obj['level_growth_group_id']);
-      this.rank_growth_group_id = str2num(obj['rank_growth_group_id']);
+      this.card_id = str2num(obj['card_id'])
+      this.camp_action_type = str2num(obj['camp_action_type'])
+      this.relationship = str2num(obj['relationship'])
+      this.satisfaction = str2num(obj['satisfaction'])
+      this.comfortableness = str2num(obj['comfortableness'])
+      this.warmth = str2num(obj['warmth'])
+      this.healing = str2num(obj['healing'])
+      this.hotness = str2num(obj['hotness'])
+      this.coldness = str2num(obj['coldness'])
+      this.sporty = str2num(obj['sporty'])
+      this.relaxing = str2num(obj['relaxing'])
+      this.playing = str2num(obj['playing'])
+      this.cooking = str2num(obj['cooking'])
+      this.camp_skill_group_id_slot1 = str2num(obj['camp_skill_group_id_slot1'])
+      this.camp_skill_level_slot1 = str2num(obj['camp_skill_level_slot1'])
+      this.camp_skill_group_id_slot2 = str2num(obj['camp_skill_group_id_slot2'])
+      this.camp_skill_level_slot2 = str2num(obj['camp_skill_level_slot2'])
+      this.camp_skill_group_id_slot3 = str2num(obj['camp_skill_group_id_slot3'])
+      this.camp_skill_level_slot3 = str2num(obj['camp_skill_level_slot3'])
+      this.camp_support_effect_group_id_slot1 = str2num(
+        obj['camp_support_effect_group_id_slot1']
+      )
+      this.camp_support_effect_level_slot1 = str2num(
+        obj['camp_support_effect_level_slot1']
+      )
+      this.camp_support_effect_group_id_slot2 = str2num(
+        obj['camp_support_effect_group_id_slot2']
+      )
+      this.camp_support_effect_level_slot2 = str2num(
+        obj['camp_support_effect_level_slot2']
+      )
+      this.camp_support_effect_group_id_slot3 = str2num(
+        obj['camp_support_effect_group_id_slot3']
+      )
+      this.camp_support_effect_level_slot3 = str2num(
+        obj['camp_support_effect_level_slot3']
+      )
+      this.camp_support_effect_group_id_slot4 = str2num(
+        obj['camp_support_effect_group_id_slot4']
+      )
+      this.camp_support_effect_level_slot4 = str2num(
+        obj['camp_support_effect_level_slot4']
+      )
+      this.camp_support_effect_group_id_slot5 = str2num(
+        obj['camp_support_effect_group_id_slot5']
+      )
+      this.camp_support_effect_level_slot5 = str2num(
+        obj['camp_support_effect_level_slot5']
+      )
+      this.camp_support_effect_group_id_slot6 = str2num(
+        obj['camp_support_effect_group_id_slot6']
+      )
+      this.camp_support_effect_level_slot6 = str2num(
+        obj['camp_support_effect_level_slot6']
+      )
+      this.camp_turn_event_id_slot1 = str2num(obj['camp_turn_event_id_slot1'])
+      this.camp_turn_event_id_slot2 = str2num(obj['camp_turn_event_id_slot2'])
+      this.camp_turn_event_id_slot3 = str2num(obj['camp_turn_event_id_slot3'])
+      this.level_growth_group_id = str2num(obj['level_growth_group_id'])
+      this.rank_growth_group_id = str2num(obj['rank_growth_group_id'])
     } catch (e) {
-      throw obj;
+      throw obj
     }
   }
 }
@@ -138,7 +156,6 @@ class CardCampProperty {
 //   const data = await readTsv('Card')
 //   return data.filter(o => o.id !== '').map(o => new Card(o))
 // }
-
 
 // export async function readCardCampProperty(): Promise<CardCampProperty[]> {
 //   const data = await readTsv('CardCampProperty')
