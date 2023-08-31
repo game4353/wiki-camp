@@ -1,16 +1,15 @@
-import useSWR from 'swr'
+export const fetcher = async (...args: Parameters<typeof fetch>): Promise<any> => {
+  const response = await fetch(...args);
+  const data = await response.json();
+  return data;
+};
 
-//@ts-ignore
-const fetcher = (...args) => fetch(...args).then(res => res.json())
+export function identity<T> (val: T): T {
+  return val
+}
 
-export function useUser (id: number) {
-  const { data, error, isLoading } = useSWR(`/api/ja/card`, fetcher)
-
-  return {
-    cards: data as Card[],
-    isLoading,
-    isError: error
-  }
+export type Row<T> = {
+  [title: string]: (o: T) => string | number
 }
 
 function str2num (str: string): number {
@@ -18,33 +17,6 @@ function str2num (str: string): number {
   const num = Number(str)
   if (isNaN(num)) throw new Error(`${str} is not a number.`)
   return num
-}
-
-export class Card {
-  id: string
-  member_id: string
-  costume_id: string
-  clothes_id: string
-  name_prefix_text_id: string
-  rarity: string
-  level_growth_id: string
-  description: string
-  open_date: string
-  constructor (obj: Record<string, string>) {
-    try {
-      this.id = obj['id']
-      this.member_id = obj['member_id']
-      this.costume_id = obj['costume_id']
-      this.clothes_id = obj['clothes_id']
-      this.name_prefix_text_id = obj['name_prefix_text_id']
-      this.rarity = obj['rarity']
-      this.level_growth_id = obj['level_growth_id']
-      this.description = obj['description']
-      this.open_date = obj['open_date']
-    } catch (e) {
-      throw obj
-    }
-  }
 }
 
 class CardCampProperty {
@@ -161,3 +133,24 @@ class CardCampProperty {
 //   const data = await readTsv('CardCampProperty')
 //   return data.filter(o => o.card_id !== '').map(o => new CardCampProperty(o))
 // }
+
+export function getLocale(): string {
+  return 'ja'
+}
+
+/** Convert Unix timestamp to Japan timestamp. */
+export function unixToJst(unixTimestamp: number): string {
+  const date = new Date(unixTimestamp * 1000);
+  const options = {
+      timeZone: 'Asia/Tokyo',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      timeZoneName: 'short',
+  } as const;
+  const formatter = new Intl.DateTimeFormat(getLocale(), options);
+  return formatter.format(date);
+}

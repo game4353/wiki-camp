@@ -9,19 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@formatjs/intl-localematcher": "^0.4.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-regular-svg-icons": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@heroicons/react": "^2.0.18",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "20.4.2",
     "@types/papaparse": "^5.3.7",
-    "@types/react": "^18.2.15",
+    "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/react-redux": "^7.1.25",
-    "autoprefixer": "10.4.14",
+    "classnames": "^2.3.2",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
-    "next": "^13.4.9",
+    "negotiator": "^0.6.3",
+    "next": "^13.4.19",
     "next-redux-wrapper": "^8.1.0",
     "papaparse": "^5.4.1",
-    "postcss": "8.4.26",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-papaparse": "^4.1.0",
@@ -31,7 +37,13 @@
     "redux-saga": "^1.2.3",
     "redux-thunk": "^2.4.2",
     "swr": "^2.2.2",
-    "tailwindcss": "3.3.3",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "usehooks-ts": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/negotiator": "^0.6.1",
+    "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.29",
+    "tailwindcss": "^3.3.3"
   }
 }
