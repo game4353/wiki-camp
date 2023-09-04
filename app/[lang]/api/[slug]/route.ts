@@ -7,7 +7,7 @@ export async function GET (
   { params: { lang, slug } }: { params: { lang: string, slug: string } }
 ) {
   if (lang === 'zh') lang = 'zh-TW'
-  const jsonPath = path.join(process.cwd(), 'data', lang, `${slug}.json`)
+  const jsonPath = path.join(process.cwd(), 'data', 'master', lang, `${slug}.json`)
   let jsonObj
   try {
     const fileContents = await fs.readFile(jsonPath, 'utf8')
