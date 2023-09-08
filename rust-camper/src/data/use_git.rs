@@ -1,22 +1,19 @@
 // https://siciarz.net/24-days-rust-git2/
+#![allow(dead_code)]
 
 use crate::{
-    file::{
-        dir::{dir_master_json, dir_root},
-        env::env_var,
-    },
-    game::cnst::{Lan, Vers},
+    file::{dir::dir_root, env::env_var},
+    game::cnst::{Vers, Lan},
 };
-use std::{path::Path, process::Command};
-use time;
 use git2::{
     Commit, Cred, Direction, IndexAddOption, ObjectType, Oid, PushOptions, RemoteCallbacks,
     Repository, Signature,
 };
+use std::path::Path;
+use time;
 
-
-pub fn auto_push(vers: &Vers) {
-    let commit_message = format!("{} (auto)", vers);
+pub fn auto_push(lan: Lan, vers: &Vers) {
+    let commit_message = format!("{} ({}) (auto)", vers, lan.as_str());
     let repo_root = dir_root();
     let repo = Repository::open(repo_root).unwrap();
     add_and_commit(&repo, &commit_message).unwrap();
@@ -104,15 +101,14 @@ fn push2(repo: &Repository) -> Result<(), git2::Error> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{file::dir::dir_root, game::version::get_cached_ver};
-    use ssh2::{Agent, HashType, Session};
+    use crate::file::dir::dir_root;
+    use ssh2::Session;
 
     #[test]
     fn t() {
         let repo_root = dir_root();
         let repo = Repository::open(repo_root).unwrap();
         push2(&repo).unwrap();
-
     }
 
     #[test]
@@ -128,6 +124,6 @@ mod test {
                 break;
             }
         }
-        let mut remote = session.channel_session().unwrap();
+        let mut _remote = session.channel_session().unwrap();
     }
 }

@@ -52,7 +52,7 @@ pub async fn data_main() -> Result<(), Box<dyn Error>> {
 
         // step 7: run some git push
         if old_vers != new_vers {
-            auto_push(&new_vers);
+            auto_push(lan, &new_vers);
         }
     }
     Ok(())
