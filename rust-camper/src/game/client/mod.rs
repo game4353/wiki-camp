@@ -3,7 +3,7 @@ mod certificate;
 // mod changenickname;
 // mod generate;
 mod master;
-// mod ranking;
+mod ranking;
 mod resource;
 // mod user_load;
 // mod user_profile;

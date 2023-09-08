@@ -72,6 +72,10 @@ pub fn dir_resource_json(lan: &Lan) -> PathBuf {
     dir_root().join("data/resource").join(lan)
 }
 
+/// this stores event ranking data
+pub fn dir_ranking_json(id: i32) -> PathBuf {
+    dir_root().join("data/ranking").join(id.to_string())
+}
 /// this stores raw asset binary files as caches
 pub fn dir_resource_raw(lan: &Lan) -> PathBuf {
     dir_rust().join("data/resource").join(lan)

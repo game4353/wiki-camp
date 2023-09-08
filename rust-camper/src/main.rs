@@ -1,9 +1,11 @@
-use data::data_main;
-
 mod data;
 mod file;
 mod game;
 pub mod image;
+#[cfg(test)]
+mod test;
+
+use data::data_main;
 
 #[tokio::main]
 async fn main() {
