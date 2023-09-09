@@ -10,6 +10,7 @@ pub async fn img_main() {
     let filter = |id: u32| {
         let id = id.to_string();
         id.starts_with("1102")
+            || id.starts_with("1122")
             || id.starts_with("21")
             || id.starts_with("22")
             || id.starts_with("23")
