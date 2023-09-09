@@ -1,12 +1,10 @@
 mod authorize;
 mod certificate;
-// mod changenickname;
 // mod generate;
 mod master;
 mod ranking;
 mod resource;
-// mod user_load;
-// mod user_profile;
+mod user;
 
 use super::{
     cnst::{Lan, Vers},
@@ -40,6 +38,7 @@ pub fn jp_timestamp() -> String {
 
 #[derive(Debug, Default)]
 pub struct Client {
+    /// the one shows left bottom of the game
     pub uid: String,
     uuid: String,
     /// e.g. 1.2.345
@@ -134,6 +133,23 @@ impl Client {
         let body = to_body(body);
         let response = client
             .post(url)
+            .body(body)
+            .headers(self.headers.clone())
+            .send()
+            .await?;
+        let response_body = response.bytes().await?;
+        let bytes = try_unzip_bytes(response_body.into());
+        Ok(bytes)
+    }
+    pub async fn send_put(
+        &mut self,
+        path: &str,
+        body: Vec<u8>,
+    ) -> Result<Vec<u8>, reqwest::Error> {
+        let client = reqwest::Client::new();
+        let url = self.get_url(path, None);
+        let response = client
+            .put(url)
             .body(body)
             .headers(self.headers.clone())
             .send()

@@ -1,5 +1,34 @@
 use serde_json::{json, Map, Value};
-use std::collections::VecDeque;
+use std::{collections::VecDeque, mem};
+
+pub fn vari64(id: u8, mut n: i64) -> Vec<u8> {
+    if n == 0 {
+        vec![]
+    } else {
+        let mut v = vec![id << 3];
+        let mask = 0b0111_1111;
+        loop {
+            let b7 = (n & mask) as u8;
+            n >>= 7;
+            if n > 0 {
+                v.push((!mask as u8) | b7);
+            } else {
+                v.push(b7);
+                break;
+            }
+        }
+        v
+    }
+}
+
+pub fn fixed64(id: u8, d: f64) -> Vec<u8> {
+    if d == 0.0 {
+        vec![]
+    } else {
+        let bytes: [u8; 8] = unsafe { mem::transmute(d) };
+        [vec![(id << 3) | 1], bytes.to_vec()].concat()
+    }
+}
 
 pub fn decode_bytes(bytes: Vec<u8>) -> Value {
     let mut vd: VecDeque<u8> = bytes.into_iter().collect();
