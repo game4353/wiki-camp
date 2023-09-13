@@ -1,7 +1,10 @@
+import { Locale } from '@/i18n-config'
 import { useSearchFilter, useFilter, FilterKit } from '../main'
 import { CostumeItem } from './data'
+import { useText } from '@/app/master/main'
 
-export function useFilters (): FilterKit<CostumeItem>[] {
+export function useFilters (lang: Locale): FilterKit<CostumeItem>[] {
+  const text = useText(lang)
   return [
     useSearchFilter(),
     useFilter(
@@ -15,47 +18,41 @@ export function useFilters (): FilterKit<CostumeItem>[] {
     ),
     useFilter(
       'Skill1',
-      [
-        { name: 'Relax', value: '1' },
-        { name: 'Play', value: '2' },
-        { name: 'Cook', value: '3' }
-      ],
+      [1, 2, 3].map(v => ({
+        name: text.map('CampText', 420003 + v),
+        value: v.toString()
+      })),
       o =>
         o.skill1?.skillLottery?.case_mission_type_ids?.split(',') ?? []
     ),
     useFilter(
       'Skill2',
-      [
-        { name: 'Relax', value: '1' },
-        { name: 'Play', value: '2' },
-        { name: 'Cook', value: '3' }
-      ],
+      [1, 2, 3].map(v => ({
+        name: text.map('CampText', 420003 + v),
+        value: v.toString()
+      })),
       o =>
         o.skill2?.skillLottery?.case_mission_type_ids?.split(',') ?? []
     ),
     useFilter(
       'Skill3',
-      [
-        { name: 'Relax', value: '1' },
-        { name: 'Play', value: '2' },
-        { name: 'Cook', value: '3' }
-      ],
+      [1, 2, 3].map(v => ({
+        name: text.map('CampText', 420003 + v),
+        value: v.toString()
+      })),
       o =>
         o.skill3?.skillLottery?.case_mission_type_ids?.split(',') ?? []
     ),
     useFilter(
       'Type',
-      [
-        { name: 'つながり', value: '1' },
-        { name: 'まんぞく', value: '2' },
-        { name: 'いごこち', value: '3' },
-        { name: 'ぬくもり', value: '4' },
-        { name: 'いやし', value: '5' }
-      ],
+      [1, 2, 3, 4, 5].map(v => ({
+        name: text.map('CampText', 410000 + v),
+        value: v.toString()
+      })),
       o => o.type.toString()
     ),
     useFilter(
-      'Hot',
+      text.map('CampText', 420001),
       [
         { name: 'S', value: '8' },
         { name: 'A', value: '7' },
@@ -69,7 +66,7 @@ export function useFilters (): FilterKit<CostumeItem>[] {
       o => o.hot.toString()
     ),
     useFilter(
-      'Cold',
+      text.map('CampText', 420002),
       [
         { name: 'S', value: '8' },
         { name: 'A', value: '7' },
@@ -83,7 +80,7 @@ export function useFilters (): FilterKit<CostumeItem>[] {
       o => o.cold.toString()
     ),
     useFilter(
-      'Sport',
+      text.map('CampText', 420003),
       [
         { name: 'S', value: '8' },
         { name: 'A', value: '7' },

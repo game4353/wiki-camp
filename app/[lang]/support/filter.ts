@@ -1,7 +1,10 @@
+import { Locale } from '@/i18n-config'
 import { useSearchFilter, useFilter, FilterKit } from '../main'
 import { SupportItem } from './data'
+import { useText } from '@/app/master/main'
 
-export function useFilters (): FilterKit<SupportItem>[] {
+export function useFilters (lang: Locale): FilterKit<SupportItem>[] {
+  const text = useText(lang)
   return [
     useSearchFilter(),
     useFilter(
@@ -15,25 +18,19 @@ export function useFilters (): FilterKit<SupportItem>[] {
     ),
     useFilter(
       'Skill',
-      [
-        { name: 'Relax', value: '1' },
-        { name: 'Play', value: '2' },
-        { name: 'Cook', value: '3' }
-      ],
-      o =>
-        o.skill?.skillLottery?.case_mission_type_ids?.split(',') ?? []
+      [1, 2, 3].map(v => ({
+        name: text.map('CampText', 420003 + v),
+        value: v.toString()
+      })),
+      o => o.skill?.skillLottery?.case_mission_type_ids?.split(',') ?? []
     ),
     useFilter(
       'Type',
-      [
-        { name: 'つながり', value: '1' },
-        { name: 'まんぞく', value: '2' },
-        { name: 'いごこち', value: '3' },
-        { name: 'ぬくもり', value: '4' },
-        { name: 'いやし', value: '5' }
-      ],
+      [1, 2, 3, 4, 5].map(v => ({
+        name: text.map('CampText', 410000 + v),
+        value: v.toString()
+      })),
       o => o.type.toString()
-    ),
-    
+    )
   ]
 }

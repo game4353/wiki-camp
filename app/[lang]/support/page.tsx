@@ -10,7 +10,7 @@ export default function Supports ({
 }: {
   params: { lang: Locale }
 }) {
-  return useMyPage(useSupports(lang), useFilters(), [
+  return useMyPage(useSupports(lang), useFilters(lang), [
     { name: 'ID', uid: 'uid' },
     { name: 'ICON', uid: 'icon', show: true },
     { name: 'NAME', uid: 'name', show: true },

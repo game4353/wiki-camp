@@ -30,7 +30,7 @@ export default function Navbar (props: Props) {
       <button className='md:hidden' onClick={props.onMenuButtonClick}>
         <Bars3Icon className='h-6 w-6' />
       </button>
-      {/* <LocaleSwitcher/> */}
+      <LocaleSwitcher />
     </nav>
   )
 }

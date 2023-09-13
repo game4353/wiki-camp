@@ -10,7 +10,7 @@ export default function Costumes ({
 }: {
   params: { lang: Locale }
 }) {
-  return useMyPage(useCostumes(lang), useFilters(), [
+  return useMyPage(useCostumes(lang), useFilters(lang), [
     { name: 'ID', uid: 'uid' },
     { name: 'ICON', uid: 'icon', show: true },
     { name: 'NAME', uid: 'nameC', show: true },

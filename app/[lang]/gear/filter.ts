@@ -1,7 +1,10 @@
+import { Locale } from '@/i18n-config'
 import { useSearchFilter, useFilter, FilterKit } from '../main'
 import { GearItem } from './data'
+import { useText } from '@/app/master/main'
 
-export function useFilters (): FilterKit<GearItem>[] {
+export function useFilters (lang: Locale): FilterKit<GearItem>[] {
+  const text = useText(lang)
   return [
     useSearchFilter(),
     useFilter(
@@ -15,11 +18,10 @@ export function useFilters (): FilterKit<GearItem>[] {
     ),
     useFilter(
       'Skill',
-      [
-        { name: 'Relax', value: '1' },
-        { name: 'Play', value: '2' },
-        { name: 'Cook', value: '3' }
-      ],
+      [1, 2, 3].map(v => ({
+        name: text.map('CampText', 420003 + v),
+        value: v.toString()
+      })),
       o =>
       o.skill?.skillLottery?.case_mission_type_ids?.split(',') ?? []
     ),

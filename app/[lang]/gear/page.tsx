@@ -10,7 +10,7 @@ export default function Gears ({
 }: {
   params: { lang: Locale }
 }) {
-  return useMyPage(useGears(lang), useFilters(), [
+  return useMyPage(useGears(lang), useFilters(lang), [
     { name: 'ID', uid: 'uid' },
     { name: 'ICON', uid: 'icon', show: true },
     { name: 'NAME', uid: 'nameC', show: true },
