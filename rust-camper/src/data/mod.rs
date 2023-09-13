@@ -31,7 +31,7 @@ pub async fn data_main() -> Result<(), Box<dyn Error>> {
         }
 
         // step 4: read master binary & write sub master json
-        if old_vers.master != new_vers.master {
+        if old_vers != new_vers {
             let json = bin_to_json(master_bytes, "Pmaster::All");
             let folder = dir_master_json(&lan);
             json.as_object().unwrap().iter().try_for_each(|(k, v)| {

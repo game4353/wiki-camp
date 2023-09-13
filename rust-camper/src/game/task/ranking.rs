@@ -25,5 +25,8 @@ pub async fn download_rank(fid: i32) -> Result<(), Box<dyn Error>> {
     for page in [100, 300, 500] {
         download_rank_page(&mut client, fid, page).await?;
     }
+    // for page in 83..86 {
+    //     download_rank_page(&mut client, fid, page).await?;
+    // }
     Ok(())
 }
