@@ -12,7 +12,6 @@ import type {
 import { useMemo } from 'react'
 import Thumbnail from './thumbnail'
 import { useTurnEvents } from '../event/turn/main'
-import { useHeaders as useHeaders2 } from '../main'
 import { SkillItem, useSkillItem } from '../skill/data'
 import Timestamp from '@/app/component/timestamp'
 import Skill from '../skill'
@@ -129,18 +128,4 @@ export function useCostumes (lang: Locale) {
     l,
     e
   }
-}
-
-export function useHeaders () {
-  return useHeaders2<CostumeItem>([
-    { name: 'ID', uid: 'uid' },
-    { name: 'ICON', uid: 'icon', show: true },
-    { name: 'NAME', uid: 'nameC', show: true },
-    { name: 'APT', uid: 'aptC', show: true },
-    { name: 'SKILL1', uid: 'skill1C', show: true },
-    { name: 'SKILL2', uid: 'skill2C', show: true },
-    { name: 'SKILL3', uid: 'skill3C', show: true },
-    { name: 'EVENT', uid: 'event', show: true },
-    { name: 'RELEASE', uid: 'release', show: true }
-  ])
 }

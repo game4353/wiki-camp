@@ -127,10 +127,10 @@ export function useMyPage<T extends { uid: string | number }> (
     e: any
   },
   filters: FilterKit<T>[],
-  headerO: ReturnType<typeof useHeaders>
+  columns: Column<T>[]
 ) {
   const { d: items, l, e } = itemO
-  const { visibleColumns, tableHeader, selectVisibleColumn } = headerO
+  const { visibleColumns, tableHeader, selectVisibleColumn } = useHeaders(columns)
 
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
   const filteredItems = useMemo(

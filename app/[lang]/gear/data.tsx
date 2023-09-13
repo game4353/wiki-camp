@@ -3,20 +3,14 @@ import { Item, mergeMaster, useMaster, useText } from '@/app/master/main'
 import type {
   CampSkill,
   CampSkillTrick,
-  CampSupportEffect,
   CampTurnEvent,
-  Card,
-  CardCampProperty,
   CraftRecipe,
   Gear,
   GearProperty,
-  Member
 } from '@/app/master/main'
 import { useMemo } from 'react'
 import Thumbnail from './thumbnail'
 import { useTurnEvents } from '../event/turn/main'
-import { useHeaders as useHeaders2 } from '../main'
-import { map8score } from '@/app/util'
 import { SkillItem, useSkillItem } from '../skill/data'
 import Aptitude from '@/app/component/aptitude'
 import Skill from '../skill'
@@ -126,17 +120,4 @@ export function useGears (lang: Locale) {
     l,
     e
   }
-}
-
-export function useHeaders () {
-  return useHeaders2<GearItem>([
-    { name: 'ID', uid: 'uid' },
-    { name: 'ICON', uid: 'icon', show: true },
-    { name: 'NAME', uid: 'nameC', show: true },
-    { name: 'RARE', uid: 'rareText' },
-    { name: 'APT', uid: 'aptC', show: true },
-    { name: 'SKILL', uid: 'skillC', show: true },
-    { name: 'EVENT', uid: 'event', show: true },
-    { name: 'RECIPE', uid: 'recipe', show: true }
-  ])
 }

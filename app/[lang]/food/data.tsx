@@ -6,7 +6,6 @@ import type {
 } from '@/app/master/main'
 import { useMemo } from 'react'
 import Thumbnail from './thumbnail'
-import { useHeaders as useHeaders2 } from '../main'
 
 export type FoodItem = {
   uid: number
@@ -86,14 +85,4 @@ export function useFoods (lang: Locale) {
     l,
     e
   }
-}
-
-export function useHeaders () {
-  return useHeaders2<FoodItem>([
-    { name: 'ID', uid: 'uid' },
-    { name: 'ICON', uid: 'icon', show: true },
-    { name: 'NAME', uid: 'nameC', show: true },
-    { name: 'RARE', uid: 'rareText' },
-    { name: 'RECIPE', uid: 'recipe', show: true }
-  ])
 }

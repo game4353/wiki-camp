@@ -2,7 +2,6 @@ import { Locale } from '@/i18n-config'
 import { mergeMaster, useMaster, useText } from '@/app/master/main'
 import type {
   CampSkill,
-  CampSkillTrick,
   CampSupportEffect,
   CampTurnEvent,
   Card,
@@ -11,14 +10,12 @@ import type {
 import { useMemo } from 'react'
 import Thumbnail from './thumbnail'
 import { useTurnEvents } from '../event/turn/main'
-import { useHeaders as useHeaders2 } from '../main'
 import { SkillItem, useSkillItem } from '../skill/data'
 import Skill from '../skill'
 import Timestamp from '@/app/component/timestamp'
 
 export type SupportItem = {
   uid: number
-  id: number
   icon: JSX.Element
   name: string
   searchName: string
@@ -79,11 +76,10 @@ export function useSupports (lang: Locale) {
     const sgid = data.card_camp_property.get?.(o.id)?.camp_skill_group_id_slot1
     const skill = data.skill.d.find(s => s.sgid === sgid && s.level === 1)
     const eid = ccp?.camp_turn_event_id_slot1
-    const event = (eid == null) ? (<p></p>) : data.turn_events.d[eid]?.descC
+    const event = eid == null ? <p></p> : data.turn_events.d[eid]?.descC
 
     return {
       uid: id,
-      id,
       icon,
       name,
       searchName: name,
@@ -91,9 +87,9 @@ export function useSupports (lang: Locale) {
       rareText: ['', 'N', 'R', 'SR'][rare],
       type,
       skill,
-      skillC: <Skill lang={lang} layout='full' skill={skill}/>,
+      skillC: <Skill lang={lang} layout='full' skill={skill} />,
       support,
-      event,      
+      event,
       release: <Timestamp unix={o.open_date} />
     }
   }
@@ -107,16 +103,4 @@ export function useSupports (lang: Locale) {
     l,
     e
   }
-}
-
-export function useHeaders () {
-  return useHeaders2<SupportItem>([
-    { name: 'ICON', uid: 'icon', show: true },
-    { name: 'NAME', uid: 'name', show: true },
-    { name: 'RARE', uid: 'rareText' },
-    { name: 'SKILL', uid: 'skillC', show: true },
-    { name: 'SUPPORT', uid: 'support', show: true },
-    { name: 'EVENT', uid: 'event', show: true },
-    { name: 'TYPE', uid: 'type' }
-  ])
 }
