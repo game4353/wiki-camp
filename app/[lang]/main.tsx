@@ -181,7 +181,7 @@ export function usePage<T> (filteredItems: T[]) {
           Rows per page:
           <select
             className='bg-transparent outline-none text-default-400 text-small'
-            value='10'
+            value={rowsPerPage}
             onChange={onRowsPerPageChange}
           >
             <option value='5'>5</option>
