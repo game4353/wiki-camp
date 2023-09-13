@@ -41,7 +41,7 @@ export default function Sidebar ({
     <div
       className={classNames({
         'flex flex-col justify-between': true, // layout
-        'bg-indigo-700 text-zinc-50': true, // colors
+        'bg-blue-800 text-zinc-50': true, // colors
         'md:w-full md:sticky md:top-16 md:z-0 top-0 z-20 fixed': true, // positioning
         'md:h-[calc(100vh_-_64px)] h-full w-[300px]': true, // for height and width
         'transition-transform .3s ease-in-out md:translate-x-0': true, //animations
@@ -71,6 +71,7 @@ export default function Sidebar ({
         </ul>
       </nav>
       {/* account  */}
+      {/*
       <div className='border-t border-t-indigo-800 p-4'>
         <div className='flex gap-4 items-center'>
           <Image
@@ -88,6 +89,7 @@ export default function Sidebar ({
           </div>
         </div>
       </div>
+      */}
     </div>
   )
 }

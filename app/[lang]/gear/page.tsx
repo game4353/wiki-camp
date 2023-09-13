@@ -2,22 +2,21 @@
 
 import { Selection } from '@nextui-org/react'
 import { Locale } from '@/i18n-config'
-import { useCostumes, useHeaders } from './data'
+import { useGears, useHeaders } from './data'
 import { useMemo, useState } from 'react'
 import { usePage } from '../main'
 import { myTable, myTabs } from '../myTemplate'
 import { useFilters } from './filter'
 
-export default function Costumes ({
+export default function Gears ({
   params: { lang }
 }: {
   params: { lang: Locale }
 }) {
-  const { d: items, l, e } = useCostumes(lang)
+  const { d: items, l, e } = useGears(lang)
   const filters = useFilters()
-  const { visibleColumns, tableHeader, selectVisibleColumn } = useHeaders()
-  
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
+  const { visibleColumns, tableHeader, selectVisibleColumn } = useHeaders()
   const filteredItems = useMemo(
     () => filters.reduce((list, { f }) => f(list), items),
     [l, ...filters.map(o => o.a)]
