@@ -17,6 +17,7 @@ pub async fn img_main() {
             || id.starts_with("24")
             || id.starts_with("290")
             || id.starts_with("303")
+            || id.starts_with("4610")
             || id.starts_with("5810")
     };
     download_assets(Lan::JA, filter, true).await;
