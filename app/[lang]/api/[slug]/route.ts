@@ -9,9 +9,13 @@ export async function GET (
   if (lang === 'zh') lang = 'zh-TW'
   const jsonPath = path.join(process.cwd(), 'data', 'master', lang, `${slug}.json`)
   let jsonObj
+  console.log(jsonPath)
   try {
+    const data = await import(`@/data/master/${lang}/${slug}.json`)
+    
     const fileContents = await fs.readFile(jsonPath, 'utf8')
-    jsonObj = JSON.parse(fileContents)
+    // jsonObj = JSON.parse(fileContents)
+    jsonObj = data.default
   } catch (e) {
     console.error(e)
     jsonObj = {}
