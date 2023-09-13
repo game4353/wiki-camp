@@ -258,13 +258,3 @@ export function useHeaders<T> (columns: Column<T>[]) {
     selectVisibleColumn
   }
 }
-
-export function str2element (str?: string) {
-  return (
-    <div className='flex flex-col'>
-      {(str?.split('\n') ?? []).map((t, i) => (
-        <div key={i}>{t}</div>
-      ))}
-    </div>
-  )
-}

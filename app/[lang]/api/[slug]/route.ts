@@ -13,6 +13,7 @@ export async function GET (
     const fileContents = await fs.readFile(jsonPath, 'utf8')
     jsonObj = JSON.parse(fileContents)
   } catch (e) {
+    console.error(e)
     jsonObj = {}
   }
   return NextResponse.json(jsonObj, { status: 200 })
