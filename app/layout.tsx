@@ -6,14 +6,16 @@ import { useState } from 'react'
 import Sidebar from './home/sidebar'
 import Navbar from './home/navbar'
 import { Locale, i18n } from '@/i18n-config'
-import {Providers} from "./providers";
+import { Providers } from './providers'
 
-import "@fortawesome/fontawesome-svg-core/styles.css";
-import { config } from "@fortawesome/fontawesome-svg-core";
-config.autoAddCss = false;
+import 'primereact/resources/themes/lara-light-indigo/theme.css'
+import 'primereact/resources/primereact.min.css'
+
+import '@fortawesome/fontawesome-svg-core/styles.css'
+import { config } from '@fortawesome/fontawesome-svg-core'
+config.autoAddCss = false
 
 const inter = Inter({ subsets: ['latin'] })
-
 
 export async function generateStaticParams () {
   return i18n.locales.map(lang => {
