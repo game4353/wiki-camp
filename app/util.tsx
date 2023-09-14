@@ -1,3 +1,5 @@
+import React from 'react'
+
 export const fetcher = async (
   ...args: Parameters<typeof fetch>
 ): Promise<any> => {
@@ -32,12 +34,22 @@ export function isEmpty (input: Record<any, any> | any[]) {
   return Object.keys(input).length === 0
 }
 
-export function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+export function capitalize (str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 // add + sign to positive numbers, and turn to string
 export function signed (num?: number) {
   num = num ?? 0
   return num < 0 ? String(num) : `+${num}`
+}
+
+// this change "\n" to "<br/>" safely
+export function formatText (text: string) {
+  return text.split('\n').map((line, index) => (
+    <React.Fragment key={index}>
+      {index > 0 && <br />} {/* Add <br> except for the first line */}
+      {line}
+    </React.Fragment>
+  ))
 }
