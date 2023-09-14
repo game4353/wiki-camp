@@ -10,12 +10,12 @@ import type {
   Member
 } from '@/app/master/main'
 import { useMemo } from 'react'
-import Thumbnail from './thumbnail'
 import { useTurnEvents } from '../event/turn/main'
 import { SkillItem, useSkillItem } from '../skill/data'
 import Timestamp from '@/app/component/timestamp'
 import Skill from '../skill'
 import Aptitude from '@/app/component/aptitude'
+import Thumbnail from '@/app/component/thumbnail'
 
 export type CostumeItem = {
   uid: number
@@ -69,9 +69,8 @@ export function useCostumes (lang: Locale) {
     const ccp = data.card_camp_property.get?.(o.id)
 
     const id = o.id
-    const rare = o.rarity
+    const rare = o.rarity as (1 | 2 | 3)
     const type = ccp?.camp_action_type ?? 0
-    const icon = Thumbnail({ id, rare, type })
     const costume = textMap('CardText', o.name_prefix_text_id)
     const name = data.member.get?.(o.member_id)?.fullname ?? ''
     const nameC = (
@@ -96,7 +95,15 @@ export function useCostumes (lang: Locale) {
 
     return {
       uid: id,
-      icon,
+      icon: (
+        <Thumbnail
+          bg={rare}
+          rid={`210${id}`}
+          frame={1}
+          rare={rare}
+          type={type}
+        />
+      ),
       costume,
       name,
       nameC,
@@ -114,7 +121,7 @@ export function useCostumes (lang: Locale) {
       hot,
       cold,
       sport,
-      aptC: <Aptitude type='costume' hot={hot} cold={cold} sport={sport}/>,
+      aptC: <Aptitude type='costume' hot={hot} cold={cold} sport={sport} />,
       release: <Timestamp unix={o.open_date} />
     }
   }

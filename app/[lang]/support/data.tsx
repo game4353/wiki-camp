@@ -8,11 +8,11 @@ import type {
   CardCampProperty
 } from '@/app/master/main'
 import { useMemo } from 'react'
-import Thumbnail from './thumbnail'
 import { useTurnEvents } from '../event/turn/main'
 import { SkillItem, useSkillItem } from '../skill/data'
 import Skill from '../skill'
 import Timestamp from '@/app/component/timestamp'
+import Thumbnail from '@/app/component/thumbnail'
 
 export type SupportItem = {
   uid: number
@@ -58,7 +58,6 @@ export function useSupports (lang: Locale) {
     const id = o.id
     const rare = o.rarity
     const type = ccp?.camp_action_type ?? 0
-    const icon = Thumbnail({ id, rare, type })
     const name = textMap('CardText', o.name_prefix_text_id)
     const support = (
       <div className='flex flex-col'>
@@ -80,7 +79,14 @@ export function useSupports (lang: Locale) {
 
     return {
       uid: id,
-      icon,
+      icon: (
+        <Thumbnail
+          rid={`220${id}`}
+          frame={1}
+          rare={(['n', 'r', 'sr'] as const)[rare - 1]}
+          type={type}
+        />
+      ),
       name,
       searchName: name,
       rare,

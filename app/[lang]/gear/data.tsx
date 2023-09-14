@@ -6,14 +6,14 @@ import type {
   CampTurnEvent,
   CraftRecipe,
   Gear,
-  GearProperty,
+  GearProperty
 } from '@/app/master/main'
 import { useMemo } from 'react'
-import Thumbnail from './thumbnail'
 import { useTurnEvents } from '../event/turn/main'
 import { SkillItem, useSkillItem } from '../skill/data'
 import Aptitude from '@/app/component/aptitude'
 import Skill from '../skill'
+import Thumbnail from '@/app/component/thumbnail'
 
 export type GearItem = {
   uid: number
@@ -49,15 +49,13 @@ export function useGears (lang: Locale) {
     turn_events: useTurnEvents(lang)
   })
   const textMap = data.text.map
-  
 
   function toItem (o: Gear): GearItem {
     const gp = data.gear_property.get?.(o.id)
 
     const rare = o.rarity
-    const icon = Thumbnail({ id: o.icon_resource_id, rare })
     const name = textMap('GearText', o.gear_text_id)
-    const category = textMap('GearText',  parseInt(`10${o.category}0`))
+    const category = textMap('GearText', parseInt(`10${o.category}0`))
     const subCategory = textMap(
       'GearText',
       parseInt(`10${o.category}${o.sub_category}`)
@@ -68,11 +66,11 @@ export function useGears (lang: Locale) {
         <p className='text-default-400'>{`${category} > ${subCategory}`}</p>
       </div>
     )
-    const relax = (gp?.relaxing ?? 0)
-    const play = (gp?.playing ?? 0)
-    const cook = (gp?.cooking ?? 0)
+    const relax = gp?.relaxing ?? 0
+    const play = gp?.playing ?? 0
+    const cook = gp?.cooking ?? 0
     const eid = gp?.camp_turn_event_id
-    const event = (eid == null) ? (<p></p>) : data.turn_events.d[eid]?.descC
+    const event = eid == null ? <p></p> : data.turn_events.d[eid]?.descC
     const sid = gp?.camp_skill_id
     const skill = data.skill.d.find(s => s.uid === sid)
 
@@ -82,17 +80,29 @@ export function useGears (lang: Locale) {
         {([1, 2, 3, 4, 5, 6] as const).map(slot => {
           const matId = cr?.[`material${slot}`]
           const num = cr?.[`material${slot}_qty`]
-          if (matId == null || Number(num) === 0) return <span key={slot}></span>
+          if (matId == null || Number(num) === 0)
+            return <span key={slot}></span>
           const matTid = data.item.get?.(matId)?.name_text_id
           const text = textMap('ItemText', matTid)
-          return <span key={slot}>{text}×{num}</span>
+          return (
+            <span key={slot}>
+              {text}×{num}
+            </span>
+          )
         })}
       </div>
     )
 
     return {
       uid: o.id,
-      icon,
+      icon: (
+        <Thumbnail
+          bg={rare}
+          rid={o.icon_resource_id}
+          frame={0}
+          rare={(['n', 'r', 'sr'] as const)[rare - 1]}
+        />
+      ),
       name,
       nameC,
       searchName: name,
@@ -101,13 +111,13 @@ export function useGears (lang: Locale) {
       category,
       subCategory,
       skill,
-      skillC:  <Skill lang={lang} layout='full' skill={skill} />,
+      skillC: <Skill lang={lang} layout='full' skill={skill} />,
       event,
       relax,
       play,
       cook,
-      aptC: <Aptitude type='mission' relax={relax} play={play} cook={cook}/>,
-      recipe,
+      aptC: <Aptitude type='mission' relax={relax} play={play} cook={cook} />,
+      recipe
     }
   }
 

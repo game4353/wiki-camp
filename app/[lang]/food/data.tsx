@@ -1,11 +1,8 @@
 import { Locale } from '@/i18n-config'
 import { Item, mergeMaster, useMaster, useText } from '@/app/master/main'
-import type {
-  CraftRecipe,
-  Gear,
-} from '@/app/master/main'
+import type { CraftRecipe, Gear } from '@/app/master/main'
 import { useMemo } from 'react'
-import Thumbnail from './thumbnail'
+import Thumbnail from '@/app/component/thumbnail'
 
 export type FoodItem = {
   uid: number
@@ -31,7 +28,6 @@ export function useFoods (lang: Locale) {
 
   function toItem (o: Gear): FoodItem {
     const rare = o.rarity
-    const icon = Thumbnail({ id: o.icon_resource_id, rare })
     const name = textMap('GearText', o.gear_text_id)
     const category = textMap('GearText', parseInt(`10${o.category}0`))
     const subCategory = textMap(
@@ -66,7 +62,14 @@ export function useFoods (lang: Locale) {
 
     return {
       uid: o.id,
-      icon,
+      icon: (
+        <Thumbnail
+          bg={rare}
+          rid={o.icon_resource_id}
+          frame={0}
+          rare={(['n', 'r', 'sr'] as const)[rare - 1]}
+        />
+      ),
       name,
       nameC,
       searchName: name,
