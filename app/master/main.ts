@@ -20,6 +20,40 @@ export function useText (lang: Locale) {
   }
 }
 
+async function masterFetcher<T> (path: string, idKey: ValidKey<T>) {
+  const response = await fetch(path)
+  const data: T[] = await response.json()
+  const dict: Partial<Record<number, T>> = Object.fromEntries(
+    data.map(o => [o[idKey], o])
+  )
+  return dict
+}
+
+export function useMasterNew<T> (
+  lang: Locale,
+  database: string,
+  idKey: ValidKey<T>
+) {
+  const { data, error, isLoading } = useSWRImmutable(
+    [`/${lang}/api/${database}`, idKey],
+    ([path, idKey]) => masterFetcher<T>(path, idKey)
+  )
+
+  function get(id?: number): undefined | T
+  function get(id: 'all'): T[]
+  function get (id?: number | 'all'): undefined | T | T[] {
+    if (id == null) return undefined
+    if (id === 'all') return Object.values(data ?? []) as T[]
+    return data?.[id]
+  }
+
+  return {
+    get,
+    l: isLoading,
+    e: error
+  }
+}
+
 /** this key has to map to a number */
 type ValidKey<T> = {
   [K in keyof T]: T[K] extends number ? K : never
@@ -74,6 +108,62 @@ export function mergeMaster<T extends Partial<Record<string, FromSWR>>> (
   return { data, e, l }
 }
 
+export type Camp = {
+  id: number
+  name_text_id: number
+  bgm_cue_number: number
+  // camp_type: number
+  camper_rank: number
+  ap?: number
+  secret_reset_ap: number
+  exp: number
+  costume_exp: number
+  support_card_exp: number
+  outdoor_point: number
+  yuru: number
+  open_date: number
+  end_date: number
+  // next_camp_id?: number
+  // transportation_id: number
+  camping_area_id: number
+  month: number
+  weather: number
+  wind: number
+  temperature: number
+  chance_of_rain?: number
+  // must_gear_categories?: number
+  // must_cook_recipe_categories?: number
+  keyword_ids?: string
+  camp_site_id: number
+  // gear_cost?: number
+  reward_rainbow_reward_id: number
+  reward_gold_reward_id: number
+  reward_silver_reward_id: number
+  clear_box_reward_slot_reward_ids: string
+  clear_box_reward_slot_amounts: string
+  leader_boost: number
+  relationship_cap: number
+  satisfaction_cap: number
+  comfortableness_cap: number
+  warmth_cap: number
+  healing_cap: number
+  aptitude_adjust_group: number
+}
+
+export type CampCampingArea = {
+  id: number
+  name_text_id: number
+  desc_text_id: number
+  location_prefectures_id: number
+  location_id: number
+  forbidden_type_ids?: string
+  // ground_type: number
+  // background_resource_id: number
+  thumbnail_resource_id: number
+  // pre_chilltime_story_id: number
+  // post_chilltime_story_id: number
+}
+
 export type CampCondition = {
   id: number
   name_text_id: number
@@ -89,6 +179,10 @@ export type CampFriendship = {
   target: number
   chara_id?: number
   friendship_point: number
+}
+export type CampLocation = {
+  id: number
+  name_text_id: number
 }
 export type CampSkill = {
   id: number
@@ -177,6 +271,10 @@ export type CampSupportEffectGroup = {
   effect_target_param?: number
   case_event_flag_id?: number
 }
+export type CampTemperature = {
+  id: number
+  name_text_id: number
+}
 export type CampTurnEvent = {
   id: number
   name_text_id: number
@@ -230,6 +328,14 @@ export type CampTurnEventLottery = {
   case_location?: number
   case_keyword?: number
   case_invalid_turn_event_ids?: string
+}
+export type CampWeather = {
+  id: number
+  name_text_id: number
+}
+export type CampWind = {
+  id: number
+  name_text_id: number
 }
 
 export type Card = {
