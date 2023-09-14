@@ -15,6 +15,7 @@ pub async fn img_main() {
             || id.starts_with("22")
             || id.starts_with("23")
             || id.starts_with("24")
+            || id.starts_with("280")
             || id.starts_with("290")
             || id.starts_with("303")
             || id.starts_with("4610")
