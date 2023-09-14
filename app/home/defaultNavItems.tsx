@@ -12,11 +12,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 export const defaultNavItems: NavItem[] = [
-  // {
-  //   label: 'Campsite',
-  //   href: '/campsite',
-  //   icon: <FontAwesomeIcon icon={faCampground} size='lg' />
-  // },
+  {
+    label: 'Campsite',
+    href: '/campsite',
+    icon: <FontAwesomeIcon icon={faCampground} size='lg' />
+  },
   {
     label: 'Costume',
     href: '/costume',
