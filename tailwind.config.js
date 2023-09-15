@@ -15,6 +15,12 @@ module.exports = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },      
+      transitionDuration: {
+        '250': '250ms',
+      },
+      transitionTimingFunction: {
+        default: 'cubic-bezier(0.25, 0.1, 0.25, 1.0)'
+      },
       gridTemplateColumns: {
         sidebar: "200px auto", // 👈 for sidebar layout. adds grid-cols-sidebar class
         gear: "100px 300px 150px",

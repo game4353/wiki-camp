@@ -3,11 +3,16 @@
 
 import { NextUIProvider } from '@nextui-org/react'
 import { PrimeReactProvider } from 'primereact/api'
+import { ThemeProvider as NextThemesProvider } from 'next-themes'
 
 export function Providers ({ children }: { children: React.ReactNode }) {
   return (
     <PrimeReactProvider>
-      <NextUIProvider>{children}</NextUIProvider>
+      <NextUIProvider>
+        <NextThemesProvider attribute='class' defaultTheme='system'>
+          {children}
+        </NextThemesProvider>
+      </NextUIProvider>
     </PrimeReactProvider>
   )
 }
