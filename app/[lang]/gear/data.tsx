@@ -23,8 +23,9 @@ export type GearItem = {
   searchName: string
   rare: number
   rareText: string
-  category: string
-  subCategory: string
+  category: number
+  categoryS: string
+  subCategoryS: string
   relax: number
   play: number
   cook: number
@@ -55,15 +56,16 @@ export function useGears (lang: Locale) {
 
     const rare = o.rarity
     const name = textMap('GearText', o.gear_text_id)
-    const category = textMap('GearText', parseInt(`10${o.category}0`))
-    const subCategory = textMap(
+    const category = o.category
+    const categoryS = textMap('GearText', parseInt(`10${category}0`))
+    const subCategoryS = textMap(
       'GearText',
       parseInt(`10${o.category}${o.sub_category}`)
     )
     const nameC = (
       <div className='flex flex-col'>
         <p>{name}</p>
-        <p className='text-default-400'>{`${category} > ${subCategory}`}</p>
+        <p className='text-default-400'>{`${categoryS} > ${subCategoryS}`}</p>
       </div>
     )
     const relax = gp?.relaxing ?? 0
@@ -109,7 +111,8 @@ export function useGears (lang: Locale) {
       rare,
       rareText: String(rare),
       category,
-      subCategory,
+      categoryS,
+      subCategoryS,
       skill,
       skillC: <Skill lang={lang} layout='full' skill={skill} />,
       event,

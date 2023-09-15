@@ -22,19 +22,15 @@ export function useFilters (lang: Locale): FilterKit<GearItem>[] {
         name: text.map('CampText', 420003 + v),
         value: v.toString()
       })),
-      o =>
-      o.skill?.skillLottery?.case_mission_type_ids?.split(',') ?? []
+      o => o.skill?.skillLottery?.case_mission_type_ids?.split(',') ?? []
     ),
-    // useFilter(
-    //   'Type',
-    //   [
-    //     { name: 'つながり', value: '1' },
-    //     { name: 'まんぞく', value: '2' },
-    //     { name: 'いごこち', value: '3' },
-    //     { name: 'ぬくもり', value: '4' },
-    //     { name: 'いやし', value: '5' }
-    //   ],
-    //   o => o.type.toString()
-    // )
+    useFilter(
+      'Category',
+      new Array(9).fill(0).map((_, i) => ({
+        name: text.map('GearText', parseInt(`10${i + 1}0`)),
+        value: (i + 1).toString()
+      })),
+      o => o.category.toString()
+    )
   ]
 }
