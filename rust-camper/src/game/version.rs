@@ -1,10 +1,9 @@
+use super::cnst::{Lan, Vers};
+use crate::file::master_json;
+use regex::Regex;
 use reqwest::Client;
 use serde_json::Value;
 use std::error::Error;
-
-use crate::file::master_json;
-
-use super::cnst::{Vers, Lan};
 
 /// this returns the version of つなキャン△. e.g., "1.2.345"
 pub async fn app_version() -> Result<String, Box<dyn Error>> {
@@ -51,8 +50,26 @@ pub fn get_cached_ver(lan: Lan) -> Vers {
                 resource,
                 master,
             }
-        },
+        }
         None => Vers::default(),
     }
 }
-// TODO move this fn to data
+
+/// this returns the version of つなキャン△. e.g., "1.2.345"
+pub async fn web_version() -> Result<String, Box<dyn Error>> {
+    let response = Client::new()
+        .get("https://apps.apple.com/app/id1661047955")
+        .send()
+        .await?
+        .text()
+        .await?;
+
+    Ok(Regex::new(r">Version (\d+\.\d+.\d+)<")
+        .unwrap()
+        .captures(&response)
+        .unwrap()
+        .get(1)
+        .unwrap()
+        .as_str()
+        .to_string())
+}

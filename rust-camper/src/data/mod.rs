@@ -11,7 +11,7 @@ use crate::{
         dir::{dir_master_json, path_json_asset},
         rw::write_json,
     },
-    game::{client::Client, cnst::Lan, version::{get_cached_ver, app_version}},
+    game::{client::Client, cnst::Lan, version::{get_cached_ver, web_version}},
     image::img_main,
 };
 use std::error::Error;
@@ -22,7 +22,7 @@ pub async fn data_main() -> Result<(), Box<dyn Error>> {
         let old_vers = get_cached_ver(lan);
 
         // step 2: get latest version
-        let latest_ver = app_version().await?;
+        let latest_ver = web_version().await?;
 
         // step 3: parse .dll to .cs
         if old_vers.application != latest_ver {

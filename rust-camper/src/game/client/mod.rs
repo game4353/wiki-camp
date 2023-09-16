@@ -8,7 +8,7 @@ mod user;
 
 use super::{
     cnst::{Lan, Vers},
-    version::app_version,
+    version::web_version,
 };
 use crate::file::try_unzip_bytes;
 use chrono::Utc;
@@ -168,7 +168,7 @@ impl Client {
         lan: Lan,
     ) -> Result<(Vers, Vec<u8>, Vec<u8>), Box<dyn Error>> {
         if ver.is_empty() {
-            let ver = app_version().await?;
+            let ver = web_version().await?;
             self.set_ver(&ver);
         } else {
             self.set_ver(ver);
