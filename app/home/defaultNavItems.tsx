@@ -2,7 +2,9 @@ import React from 'react'
 import { NavItem } from './sidebar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  faBan,
   faCampground,
+  faCartShopping,
   faHandPointUp,
   faImage,
   faKitchenSet,
@@ -38,8 +40,18 @@ export const defaultNavItems: NavItem[] = [
     icon: <FontAwesomeIcon icon={faKitchenSet} size='lg' />
   },
   // {
+  //   label: 'Shop',
+  //   href: '/shop',
+  //   icon: <FontAwesomeIcon icon={faCartShopping} size='lg' />
+  // },
+  // {
   //   label: 'Tip',
   //   href: '/tip',
   //   icon: <FontAwesomeIcon icon={faHandPointUp} size='lg' />
   // },
+  {
+    label: 'NG word',
+    href: '/ng',
+    icon: <FontAwesomeIcon icon={faBan} size='lg' />
+  },
 ]

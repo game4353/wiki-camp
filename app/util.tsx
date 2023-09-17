@@ -1,4 +1,5 @@
 import React from 'react'
+import { toHiragana } from 'wanakana'
 
 export const fetcher = async (
   ...args: Parameters<typeof fetch>
@@ -52,4 +53,18 @@ export function formatText (text: string) {
       {line}
     </React.Fragment>
   ))
+}
+
+/** Just like Number(`input`) but this returns 0 if input is undefined. */
+export function num (input?: string | number) {
+  return input == null ? 0 : Number(input)
+}
+
+export function toHira (text: string) {
+  return toHiragana(text, {
+    useObsoleteKana: true,
+    passRomaji: true,
+    // @ts-ignore
+    convertLongVowelMark: false
+  })
 }

@@ -56,6 +56,7 @@
     "@types/negotiator": "^0.6.1",
     "@types/react-window": "^1.8.5",
     "@types/react-window-infinite-loader": "^1.0.6",
+    "@types/wanakana": "^4.0.3",
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29",
     "sass": "^1.67.0",
