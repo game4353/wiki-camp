@@ -3,7 +3,74 @@ import { fetcher, isEmpty } from '../util'
 import { Locale } from '@/i18n-config'
 import { useMemo } from 'react'
 
-function textMap (this: any, cat: string, id?: number) {
+type ValidTextCategory =
+  | 'AdvertisementText'
+  | 'ApText'
+  | 'AppointmentText'
+  | 'ArText'
+  | 'AreaText'
+  | 'AttributeText'
+  | 'BannerText'
+  | 'BgmText'
+  | 'BoostGroupText'
+  | 'CampText'
+  | 'CampaignText'
+  | 'CardText'
+  | 'ChallengeText'
+  | 'ChapterText'
+  | 'CharaNaviText'
+  | 'CollectionText'
+  | 'CommonText'
+  | 'ConfessionText'
+  | 'CraftText'
+  | 'FeatureText'
+  | 'FeedText'
+  | 'FuncText'
+  | 'GachaText'
+  | 'GearText'
+  | 'GrowthRewardText'
+  | 'GuideMissionText'
+  | 'GuildCampText'
+  | 'GuildText'
+  | 'HelpText'
+  | 'HomeBgmText'
+  | 'HomeLayoutText'
+  | 'HomeText'
+  | 'InvitationText'
+  | 'ItemText'
+  | 'LocationText'
+  | 'LoginText'
+  | 'LotteryText'
+  | 'MemberText'
+  | 'PhotoText'
+  | 'PlayerTitleText'
+  | 'ProfileText'
+  | 'PuzzleText'
+  | 'QuestText'
+  | 'ReactionText'
+  | 'RelationshipText'
+  | 'RewardText'
+  | 'SeasonText'
+  | 'SeriesText'
+  | 'ShopTabText'
+  | 'ShopText'
+  | 'SituationText'
+  | 'SkillText'
+  | 'SpecialContentText'
+  | 'SpecialDialogText'
+  | 'StageText'
+  | 'StampText'
+  | 'StickerText'
+  | 'StillPictureText'
+  | 'StoryText'
+  | 'TeamBattleText'
+  | 'TipsText'
+  | 'UnitText'
+  | 'VrText'
+  | 'WorkText'
+  | 'YpText'
+
+function textMap (this: any, cat: ValidTextCategory, id?: number) {
   const nil = '�'
   if (id == null) return nil
   const text = this?.[cat]?.map?.[id]
@@ -510,4 +577,60 @@ export type Item = {
   // ...
   resource_id: number
   // ...
+}
+export type Shop = {
+  id: number
+  sort_id: number
+  product_id?: string
+  tab_id: number
+  type: number
+  dia_sale?: number
+  pay: number
+  pay_item_id?: number
+  mileage_grade?: number
+  group_id?: number
+  group_seq?: number
+  name_text_id: number
+  description_text_id: number
+  detail_img_id: number
+  detail_text_id: number
+  img_id: number
+  reward_id: number
+  price?: number
+  stock?: number
+  restock_type?: number
+  restock_interval?: number
+  restock_date: number
+  is_limit?: number
+  purchased_shop_id?: number
+  start_date: number
+  open_date: number
+  close_date: number
+}
+export type ShopExchange = {
+  id: number
+  pay_item_id?: number
+  pay_item_name_abbr: number
+  name_abbr_text_id: number
+  shop_type: number
+  banner_resource_id: number
+  link?: string
+  sort_priority: number
+  open_date: number
+  close_date: number
+}
+export type ShopTab = {
+  id: number
+  type: number
+  sub_type?: number
+  parent_id?: number
+  sort_id?: number
+  pay: number
+  // resource_id?: number
+  banner_resource_id: number
+  text: string
+  text_id: number
+  is_guild?: number
+  open_date: number
+  close_date: number
 }

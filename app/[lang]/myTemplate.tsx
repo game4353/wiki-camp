@@ -15,7 +15,7 @@ import {
   Selection
 } from '@nextui-org/react'
 import { Dispatch, ReactNode, SetStateAction, useMemo, useState } from 'react'
-import { Column, FilterKit, useHeaders, usePage } from './main'
+import { Column, FilterKit, ValidColumnKey, useHeaders, usePage } from './main'
 
 export interface ItemMore {
   uid: number | string
@@ -89,8 +89,18 @@ export function myTable<T extends { uid: number | string }> (
   selectedKeys: Selection,
   setSelectedKeys: Dispatch<SetStateAction<Selection>>,
   tableHeader: JSX.Element,
-  pagedItems: T[]
+  pagedItems: T[],
+  columns?: Column<T>[]
 ) {
+  
+  function renderCell(item: T, key: keyof T): ReactNode {
+    const render = columns?.find(o => o.uid === key)?.render
+    if (render != null) return render(item)
+    else {
+      return item[key as ValidColumnKey<T>] as ReactNode
+    }
+  }
+
   return (
     <Table
       aria-label='Table of support cards.'
@@ -110,7 +120,8 @@ export function myTable<T extends { uid: number | string }> (
           <TableRow key={item.uid}>
             {columnKey => (
               <TableCell>
-                {item[columnKey as Column<T>['uid']] as ReactNode}
+                {/* {item[columnKey as Column<T>['uid']] as ReactNode} */}
+                {renderCell(item, columnKey as keyof typeof item)}
               </TableCell>
             )}
           </TableRow>
@@ -144,7 +155,8 @@ export function useMyPage<T extends { uid: string | number }> (
     selectedKeys,
     setSelectedKeys,
     tableHeader,
-    pagedItems
+    pagedItems,
+    columns
   )
   const tableSize = items.length
   const filterComponent = (

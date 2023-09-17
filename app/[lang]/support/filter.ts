@@ -1,9 +1,9 @@
 import { Locale } from '@/i18n-config'
 import { useSearchFilter, useFilter, FilterKit } from '../main'
-import { SupportItem } from './data'
+import { LocalItem } from './data'
 import { useText } from '@/app/master/main'
 
-export function useFilters (lang: Locale): FilterKit<SupportItem>[] {
+export function useFilters (lang: Locale): FilterKit<LocalItem>[] {
   const text = useText(lang)
   return [
     useSearchFilter(),

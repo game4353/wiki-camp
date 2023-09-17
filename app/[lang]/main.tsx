@@ -1,3 +1,4 @@
+import { Locale } from '@/i18n-config'
 import {
   faChevronDown,
   faMagnifyingGlass
@@ -19,7 +20,7 @@ import {
 } from '@nextui-org/react'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 
-type ValidColumnKey<T> = {
+export type ValidColumnKey<T> = {
   [K in keyof T]: T[K] extends ReactNode
     ? K extends string
       ? K
@@ -28,12 +29,20 @@ type ValidColumnKey<T> = {
 }[keyof T]
 
 export type Column<T> = {
-  uid: ValidColumnKey<T>
+  uid: string
   name: string
   align?: 'start' | 'center' | 'end'
   show?: boolean
   sortable?: boolean
-}
+} & (
+  | {
+      render: (item: T) => ReactNode
+    }
+  | {
+      uid: ValidColumnKey<T>
+      render?: undefined
+    }
+)
 
 type FilterOption = {
   /** name displays beside checkbox */
@@ -201,7 +210,7 @@ export function usePage<T> (filteredItems: T[]) {
   }
 }
 
-export function useHeaders<T> (columns: Column<T>[]) {
+export function useHeaders<T> (columns: Column<T>[] | Column<T>[]) {
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
     new Set(columns.filter(o => o.show).map(o => o.uid))
   )
@@ -257,4 +266,9 @@ export function useHeaders<T> (columns: Column<T>[]) {
     tableHeader,
     selectVisibleColumn
   }
+}
+
+export function i18n (lang: Locale, text: string) {
+  // TODO dummy function
+  return text
 }

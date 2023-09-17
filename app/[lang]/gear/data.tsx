@@ -1,57 +1,23 @@
 import { Locale } from '@/i18n-config'
-import { Item, mergeMaster, useMaster, useText } from '@/app/master/main'
-import type {
-  CampSkill,
-  CampSkillTrick,
-  CampTurnEvent,
-  CraftRecipe,
-  Gear,
-  GearProperty
-} from '@/app/master/main'
+import { Item, mergeMaster, useMasterNew, useText } from '@/app/master/main'
+import type { CraftRecipe, Gear, GearProperty } from '@/app/master/main'
 import { useMemo } from 'react'
-import { useTurnEvents } from '../event/turn/main'
-import { SkillItem, useSkillItem } from '../skill/data'
-import Aptitude from '@/app/component/aptitude'
-import Skill from '../skill'
-import Thumbnail from '@/app/component/thumbnail'
-
-export type GearItem = {
-  uid: number
-  icon: JSX.Element
-  name: string
-  nameC: JSX.Element
-  searchName: string
-  rare: number
-  rareText: string
-  category: number
-  categoryS: string
-  subCategoryS: string
-  relax: number
-  play: number
-  cook: number
-  skill?: SkillItem
-  skillC: JSX.Element
-  event: JSX.Element
-  aptC: JSX.Element
-  recipe: JSX.Element
-}
+import { useSkillItem } from '../skill/data'
+import { useTurnEventItem } from '../event/turn/main'
 
 export function useGears (lang: Locale) {
   const { data, l, e } = mergeMaster({
-    camp_skill: useMaster<CampSkill>(lang, 'camp_skill', 'id'),
-    camp_skill_trick: useMaster<CampSkillTrick>(lang, 'camp_skill_trick', 'id'),
-    camp_turn_event: useMaster<CampTurnEvent>(lang, 'camp_turn_event', 'id'),
-    craft_recipe: useMaster<CraftRecipe>(lang, 'craft_recipe', 'id'),
-    gear: useMaster<Gear>(lang, 'gear', 'id'),
-    gear_property: useMaster<GearProperty>(lang, 'gear_property', 'gear_id'),
-    item: useMaster<Item>(lang, 'item', 'id'),
+    craft_recipe: useMasterNew<CraftRecipe>(lang, 'craft_recipe', 'id'),
+    gear: useMasterNew<Gear>(lang, 'gear', 'id'),
+    gear_property: useMasterNew<GearProperty>(lang, 'gear_property', 'gear_id'),
+    item: useMasterNew<Item>(lang, 'item', 'id'),
+    event: useTurnEventItem(lang),
     skill: useSkillItem(lang),
-    text: useText(lang),
-    turn_events: useTurnEvents(lang)
+    text: useText(lang)
   })
   const textMap = data.text.map
 
-  function toItem (o: Gear): GearItem {
+  function toItem (o: Gear) {
     const gp = data.gear_property.get?.(o.id)
 
     const rare = o.rarity
@@ -62,19 +28,12 @@ export function useGears (lang: Locale) {
       'GearText',
       parseInt(`10${o.category}${o.sub_category}`)
     )
-    const nameC = (
-      <div className='flex flex-col'>
-        <p>{name}</p>
-        <p className='text-default-400'>{`${categoryS} > ${subCategoryS}`}</p>
-      </div>
-    )
-    const relax = gp?.relaxing ?? 0
-    const play = gp?.playing ?? 0
-    const cook = gp?.cooking ?? 0
-    const eid = gp?.camp_turn_event_id
-    const event = eid == null ? <p></p> : data.turn_events.d[eid]?.descC
+
     const sid = gp?.camp_skill_id
     const skill = data.skill.d.find(s => s.uid === sid)
+
+    const eid = gp?.camp_turn_event_id
+    const event = data.event.d.find(e => e.uid === eid)
 
     const cr = data.craft_recipe.get?.(o.id)
     const recipe = (
@@ -97,16 +56,9 @@ export function useGears (lang: Locale) {
 
     return {
       uid: o.id,
-      icon: (
-        <Thumbnail
-          bg={rare}
-          rid={o.icon_resource_id}
-          frame={0}
-          rare={(['n', 'r', 'sr'] as const)[rare - 1]}
-        />
-      ),
+      rid: o.icon_resource_id,
       name,
-      nameC,
+      lang,
       searchName: name,
       rare,
       rareText: String(rare),
@@ -114,19 +66,18 @@ export function useGears (lang: Locale) {
       categoryS,
       subCategoryS,
       skill,
-      skillC: <Skill lang={lang} layout='full' skill={skill} />,
       event,
-      relax,
-      play,
-      cook,
-      aptC: <Aptitude type='mission' relax={relax} play={play} cook={cook} />,
+      relax: gp?.relaxing ?? 0,
+      play: gp?.playing ?? 0,
+      cook: gp?.cooking ?? 0,
       recipe
     }
   }
 
   return {
-    d: useMemo<GearItem[]>(() => {
-      return (data.gear.d ?? [])
+    d: useMemo<ReturnType<typeof toItem>[]>(() => {
+      return data.gear
+        .get('all')
         .filter(o => o.type === 1 && o.category !== 10)
         .map(toItem)
     }, [l]),
@@ -134,3 +85,5 @@ export function useGears (lang: Locale) {
     e
   }
 }
+
+export type GearItem = ReturnType<typeof useGears>['d'][number]

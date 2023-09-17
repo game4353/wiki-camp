@@ -8,7 +8,7 @@ import type {
   CardCampProperty
 } from '@/app/master/main'
 import { useMemo } from 'react'
-import { useTurnEvents } from '../event/turn/main'
+import { useTurnEventItem } from '../event/turn/main'
 import { SkillItem, useSkillItem } from '../skill/data'
 import Skill from '../skill'
 import Timestamp from '@/app/component/timestamp'
@@ -29,7 +29,7 @@ export type SupportItem = {
   release: JSX.Element
 }
 
-export function useSupports (lang: Locale) {
+export function useLocalItem (lang: Locale) {
   const { data, l, e } = mergeMaster({
     card: useMaster<Card>(lang, 'card', 'id'),
     card_camp_property: useMaster<CardCampProperty>(
@@ -47,12 +47,12 @@ export function useSupports (lang: Locale) {
     camp_turn_event: useMaster<CampTurnEvent>(lang, 'camp_turn_event', 'id'),
     skill: useSkillItem(lang),
     text: useText(lang),
-    turn_events: useTurnEvents(lang)
+    event: useTurnEventItem(lang)
   })
   const textMap = data.text.map
   const cses = data.camp_support_effect.d
 
-  function toItem (o: Card): SupportItem {
+  function toItem (o: Card) {
     const ccp = data.card_camp_property.get?.(o.id)
 
     const id = o.id
@@ -75,10 +75,11 @@ export function useSupports (lang: Locale) {
     const sgid = data.card_camp_property.get?.(o.id)?.camp_skill_group_id_slot1
     const skill = data.skill.d.find(s => s.sgid === sgid && s.level === 1)
     const eid = ccp?.camp_turn_event_id_slot1
-    const event = eid == null ? <p></p> : data.turn_events.d[eid]?.descC
+    const event = data.event.d.find(e => e.uid === eid)
 
     return {
       uid: id,
+      lang,
       icon: (
         <Thumbnail
           rid={`220${id}`}
@@ -101,7 +102,7 @@ export function useSupports (lang: Locale) {
   }
 
   return {
-    d: useMemo<SupportItem[]>(() => {
+    d: useMemo<ReturnType<typeof toItem>[]>(() => {
       return (data.card.d ?? [])
         .filter((o): o is Card => o!.type === 14 && o!.open_date < 4e9)
         .map(toItem)
@@ -110,3 +111,5 @@ export function useSupports (lang: Locale) {
     e
   }
 }
+
+export type LocalItem = ReturnType<typeof useLocalItem>['d'][number]

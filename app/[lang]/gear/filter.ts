@@ -31,6 +31,14 @@ export function useFilters (lang: Locale): FilterKit<GearItem>[] {
         value: (i + 1).toString()
       })),
       o => o.category.toString()
+    ),
+    useFilter(
+      'Event',
+      new Array(5).fill(0).map((_, i) => ({
+        name: text.map('CampText', 410001 + i),
+        value: (i + 1).toString()
+      })),
+      o => o.event?.params.map(([a,b]) => a.toString()) ?? []
     )
   ]
 }

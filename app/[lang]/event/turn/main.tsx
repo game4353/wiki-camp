@@ -4,98 +4,50 @@ import {
   CampTurnEvent,
   Member,
   mergeMaster,
-  useMaster,
+  useMasterNew,
   useText
 } from '@/app/master/main'
-import { signed } from '@/app/util'
 import { Locale } from '@/i18n-config'
 import { useMemo } from 'react'
 
-type CampTurnEventMore = {
-  desc: string
-  descC: JSX.Element
-}
 
-function i18n (lang: Locale, text: string) {
-  // TODO dummy function
-  return text
-}
-
-export function useTurnEvents (lang: Locale) {
+export function useTurnEventItem (lang: Locale) {
   const { data, l, e } = mergeMaster({
-    camp_condition: useMaster<CampCondition>(lang, 'camp_condition', 'id'),
-    camp_friendship: useMaster<CampFriendship>(lang, 'camp_friendship', 'id'),
-    camp_turn_event: useMaster<CampTurnEvent>(lang, 'camp_turn_event', 'id'),
-    member: useMaster<Member>(lang, 'member', 'id'),
-    text: useText(lang)
+    camp_friendship: useMasterNew<CampFriendship>(lang, 'camp_friendship', 'id'),
+    camp_turn_event: useMasterNew<CampTurnEvent>(lang, 'camp_turn_event', 'id'),
   })
-  const textMap = data.text.map
 
-  function describe (lang: Locale, obj: CampTurnEvent) {
-    const arr = []
-    ;(
-      [
-        'relationship',
-        'satisfaction',
-        'comfortableness',
-        'warmth',
-        'healing'
-      ] as const
-    ).forEach((v, i) => {
-      if (Boolean(obj[v]))
-        arr.push(textMap('CampText', 410001 + i) + signed(obj[v]))
-    })
-    if (Boolean(obj.motivation)) {
-      arr.push(i18n(lang, 'やる気') + signed(obj.motivation))
+  function toItem(o: CampTurnEvent) {
+    const params = []
+    if (o.relationship != null) params.push([1, o.relationship])
+    if (o.satisfaction != null) params.push([2, o.satisfaction])
+    if (o.comfortableness != null) params.push([3, o.comfortableness])
+    if (o.warmth != null) params.push([4, o.warmth])
+    if (o.healing != null) params.push([5, o.healing])
+    
+    const friendship = data.camp_friendship.get('all')
+      .filter(v => v.group_id === o.camp_friendship_group_id)
+      .map(v => [Number(v.chara_id), v.friendship_point])
+
+    return {
+      uid: o.id,
+      params,
+      motivation: o.motivation,
+      sp: o.skill_pt,
+      condition: o.condition_id,
+      friendship,
+      health: o.health
     }
-    if (Boolean(obj.skill_pt)) {
-      arr.push('SP' + signed(obj.skill_pt))
-    }
-    if (Boolean(obj.health)) {
-      arr.push(i18n(lang, '体力') + signed(obj.health))
-    }
-    if (Boolean(obj.condition_id)) {
-      const cid = obj.condition_id!
-      const cond = data.camp_condition.get?.(cid)?.name_text_id
-      arr.push(textMap('CampText', cond))
-    }
-    if (Boolean(obj.camp_friendship_group_id)) {
-      const fid = obj.camp_friendship_group_id!
-      ;(data.camp_friendship.d ?? [])
-        .filter(o => o.group_id === fid)
-        .forEach(o => {
-          const cid = o.chara_id ?? 0
-          const c =
-            cid === 0 ? i18n(lang, '全員') : data.member.get?.(cid)?.firstname
-          const fp = o.friendship_point
-          arr.push(`${c}${i18n(lang, 'のなかよし')}${signed(fp)}`)
-        })
-    }
-    return arr.join('\n')
   }
 
-  const d = useMemo<Record<number, CampTurnEventMore>>(
-    () =>
-      Object.fromEntries(
-        (data.camp_turn_event.d ?? []).map(obj => {
-          const desc = describe(lang, obj)
-          return [
-            obj.id,
-            {
-              desc,
-              descC: (
-                <div className='flex flex-col'>
-                  {desc.split('\n').map((t, i) => (
-                    <div key={i}>{t}</div>
-                  ))}
-                </div>
-              )
-            }
-          ]
-        })
-      ),
-    [lang, l]
-  )
-
-  return { d, l, e }
+  return {
+    d: useMemo<ReturnType<typeof toItem>[]>(() => {
+      return (data.camp_turn_event.get('all'))
+        .map(i => toItem(i))
+    }, [l]),
+    l,
+    e
+  }
 }
+
+export type CampTurnEventItem = ReturnType<typeof useTurnEventItem>['d'][number]
