@@ -53,6 +53,7 @@
     "wanakana": "^5.1.0"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@types/negotiator": "^0.6.1",
     "@types/react-window": "^1.8.5",
     "@types/react-window-infinite-loader": "^1.0.6",
