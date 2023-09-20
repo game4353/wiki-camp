@@ -1,8 +1,17 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 public/images/merged/
+public/images/assets/
+!public/images/assets/campsight
+!public/images/assets/campskillicon
+!public/images/assets/campsupporticon
+!public/images/assets/item
+!public/images/assets/thumbnailn
+
+
 data/ranking/
 .gitattributes
+**/_old_*
 
 # dependencies
 /node_modules
