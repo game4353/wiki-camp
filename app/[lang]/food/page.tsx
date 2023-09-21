@@ -1,20 +1,17 @@
-'use client'
-
 import { Locale } from '@/i18n-config'
-import { useFoods } from './data'
-import { useFilters } from './filter'
-import { useMyPage } from '../myTemplate'
+import { localItems } from './item'
+import { ClientComponent } from './client'
+import { filterProp } from './filter'
 
-export default function Gears ({
-  params: { lang }
+export default async function ServerComponent ({
+  params: { lang },
+  searchParams
 }: {
   params: { lang: Locale }
+  searchParams: { [key: string]: string | string[] | undefined }
 }) {
-  return useMyPage(useFoods(lang), useFilters(), [
-    { name: 'ID', uid: 'uid' },
-    { name: 'ICON', uid: 'icon', show: true },
-    { name: 'NAME', uid: 'nameC', show: true },
-    { name: 'RARE', uid: 'rareText' },
-    { name: 'RECIPE', uid: 'recipe', show: true }
-  ])
+  const items = await localItems(lang)
+  return (
+    <ClientComponent lang={lang} items={items} filterProp={filterProp}/>
+  )
 }

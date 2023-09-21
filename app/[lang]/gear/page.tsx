@@ -1,21 +1,19 @@
-'use client'
-
 import { Locale } from '@/i18n-config'
-import { useGears } from './data'
-import { useFilters } from './filter'
-import { useMyPage } from '../myTemplate'
-import { columns } from './render'
+import { localItems } from './item'
+import { ClientComponent } from './client'
+import { getFilterProps } from './filter'
 
-export default function Gears ({
-  params: { lang }
+export default async function ServerComponent ({
+  params: { lang },
+  searchParams
 }: {
   params: { lang: Locale }
+  searchParams: { [key: string]: string | string[] | undefined }
 }) {
+  const items = await localItems(lang)
+  const fp = await getFilterProps(lang)
   
-  const filters = useFilters(lang)
-  const itemO = useGears(lang)
-
-  // console.log('data loaded?', !itemO.l)
-
-  return useMyPage(itemO, filters, columns)
+  return (
+    <ClientComponent lang={lang} items={items} filterProp={fp}/>
+  )
 }

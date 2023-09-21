@@ -1,44 +1,52 @@
-import { Locale } from '@/i18n-config'
-import { useSearchFilter, useFilter, FilterKit } from '../main'
-import { GearItem } from './data'
-import { useText } from '@/app/master/main'
+import type { Locale } from '@/i18n-config'
+import { type FilterProp } from '@/app/component/filter'
+import { serverText } from '@/app/master/server'
+import {
+  kitApt,
+  kitRare,
+  kitSkillMission,
+  kitType
+} from '@/app/component/filter/kits'
 
-export function useFilters (lang: Locale): FilterKit<GearItem>[] {
-  const text = useText(lang)
+export async function getFilterProps (lang: Locale): Promise<FilterProp> {
+  const textMap = await serverText(lang)
+
   return [
-    useSearchFilter(),
-    useFilter(
-      'Rare',
-      [
-        { name: 'SR', value: '3' },
-        { name: 'R', value: '2' },
-        { name: 'N', value: '1' }
-      ],
-      o => o.rare.toString()
-    ),
-    useFilter(
-      'Skill',
-      [1, 2, 3].map(v => ({
-        name: text.map('CampText', 420003 + v),
-        value: v.toString()
-      })),
-      o => o.skill?.skillLottery?.case_mission_type_ids?.split(',') ?? []
-    ),
-    useFilter(
-      'Category',
-      new Array(9).fill(0).map((_, i) => ({
-        name: text.map('GearText', parseInt(`10${i + 1}0`)),
-        value: (i + 1).toString()
-      })),
-      o => o.category.toString()
-    ),
-    useFilter(
-      'Event',
-      new Array(5).fill(0).map((_, i) => ({
-        name: text.map('CampText', 410001 + i),
-        value: (i + 1).toString()
-      })),
-      o => o.event?.params.map(([a,b]) => a.toString()) ?? []
-    )
+    {
+      title: 'General',
+      kits: [
+        kitRare(),
+        kitType(textMap),
+        kitApt(textMap, 'relax'),
+        kitApt(textMap, 'play'),
+        kitApt(textMap, 'cook'),
+        {
+          subtitle: 'Category',
+          v: new Array(9).fill(0).map((_, i) => ({
+            name: textMap('GearText', parseInt(`10${i + 1}0`)),
+            value: (i + 1).toString()
+          })),
+          filterKey: 'category'
+        }
+      ]
+    },
+    {
+      title: 'Skill',
+      kits: [kitSkillMission(textMap), kitType(textMap, 'skillType')]
+    },
+    // {
+    //   title: 'Event',
+    //   kits: [
+
+    //   ]
+    // }
+    // useFilter(
+    //   'Event',
+    //   new Array(5).fill(0).map((_, i) => ({
+    //     name: text.map('CampText', 410001 + i),
+    //     value: (i + 1).toString()
+    //   })),
+    //   o => o.event?.params.map(([a,b]) => a.toString()) ?? []
+    // )
   ]
 }

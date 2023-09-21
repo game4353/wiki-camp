@@ -15,7 +15,8 @@ import {
   Selection
 } from '@nextui-org/react'
 import { Dispatch, ReactNode, SetStateAction, useMemo, useState } from 'react'
-import { Column, FilterKit, ValidColumnKey, useHeaders, usePage } from './main'
+import { Column, ValidColumnKey, useHeaders, usePage } from './main'
+import { FilterKit } from '../component/filter'
 
 export interface ItemMore {
   uid: number | string
@@ -103,7 +104,7 @@ export function myTable<T extends { uid: number | string }> (
 
   return (
     <Table
-      aria-label='Table of support cards.'
+      aria-label='Table.'
       isHeaderSticky
       bottomContent={pageComponent}
       bottomContentPlacement='outside'
@@ -120,7 +121,6 @@ export function myTable<T extends { uid: number | string }> (
           <TableRow key={item.uid}>
             {columnKey => (
               <TableCell>
-                {/* {item[columnKey as Column<T>['uid']] as ReactNode} */}
                 {renderCell(item, columnKey as keyof typeof item)}
               </TableCell>
             )}
@@ -146,7 +146,7 @@ export function useMyPage<T extends { uid: string | number }> (
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
   const filteredItems = useMemo(
     () => filters.reduce((list, { f }) => f(list), items),
-    [l, ...filters.map(o => o.a)]
+    [l, ...filters.map(o => o.s)]
   )
   const { pageComponent, pagedItems } = usePage(filteredItems)
 
@@ -167,7 +167,7 @@ export function useMyPage<T extends { uid: string | number }> (
   const selectedSize = selectedKeys === 'all' ? items.length : selectedKeys.size
   const settingComponent = useMemo(() => {
     return <div className='flex flex-col gap-4'>{selectVisibleColumn}</div>
-  }, [selectedKeys, visibleColumns, l, ...filters.map(o => o.a)])
+  }, [selectedKeys, visibleColumns, l, ...filters.map(o => o.s)])
 
   if (e) return <div>{'Some error happens :('}</div>
   if (l) return <div>Loading...</div>

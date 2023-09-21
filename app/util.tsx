@@ -1,6 +1,14 @@
 import React from 'react'
 import { toHiragana } from 'wanakana'
 
+export const STATS = [
+  'relationship',
+  'satisfaction',
+  'comfortableness',
+  'warmth',
+  'healing'
+] as const
+
 export const fetcher = async (
   ...args: Parameters<typeof fetch>
 ): Promise<any> => {
@@ -12,6 +20,11 @@ export const fetcher = async (
 /** 1=G, 2=F, ... */
 export function map8score (num: number) {
   return '-GFEDCBAS'[num]
+}
+
+/** 1=N, 2=R, 3=SR */
+export function rare2text (num: number) {
+  return ['', 'N', 'R', 'SR'][num]
 }
 
 /** Convert Unix timestamp to Japan timestamp. */

@@ -1,17 +1,18 @@
-import { useSearchFilter, useFilter, FilterKit } from '../main'
-import { FoodItem } from './data'
+import type { FilterProp } from '@/app/component/filter'
 
-export function useFilters (): FilterKit<FoodItem>[] {
-  return [
-    useSearchFilter(),
-    useFilter(
-      'Rare',
-      [
-        { name: 'SR', value: '3' },
-        { name: 'R', value: '2' },
-        { name: 'N', value: '1' }
-      ],
-      o => o.rare.toString()
-    ),
-  ]
-}
+export const filterProp: FilterProp = [
+  {
+    title: 'General',
+    kits: [
+      {
+        subtitle: 'Rare',
+        v: [
+          { name: 'SR', value: 'SR' },
+          { name: 'R', value: 'R' },
+          { name: 'N', value: 'N' }
+        ],
+        filterKey: 'rare'
+      }
+    ]
+  }
+]

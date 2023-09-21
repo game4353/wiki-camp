@@ -19,6 +19,7 @@ import {
   DropdownTrigger
 } from '@nextui-org/react'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
+import type { TextMap } from '../master/text'
 
 export type ValidColumnKey<T> = {
   [K in keyof T]: T[K] extends ReactNode
@@ -33,10 +34,11 @@ export type Column<T> = {
   name: string
   align?: 'start' | 'center' | 'end'
   show?: boolean
+  hide?: boolean
   sortable?: boolean
 } & (
   | {
-      render: (item: T) => ReactNode
+      render: (item: T, textMap: TextMap) => ReactNode
     }
   | {
       uid: ValidColumnKey<T>
@@ -44,108 +46,6 @@ export type Column<T> = {
     }
 )
 
-type FilterOption = {
-  /** name displays beside checkbox */
-  name: string // TODO or component
-  /** unique string for filter */
-  value: string
-  /** filtered out at start */
-  hide?: boolean
-}
-
-export type FilterKit<T> = {
-  a: string | string[]
-  c: JSX.Element
-  f: (list: T[]) => T[]
-}
-
-export function useFilter<T> (
-  label: string,
-  filterOptions: FilterOption[],
-  toList: (o: T) => string | string[]
-) {
-  const size = filterOptions.length
-  const all = filterOptions.map(o => o.value)
-  const init = filterOptions.filter(o => !Boolean(o.hide)).map(o => o.value)
-  const [arr, setArr] = useState(all)
-
-  function filter (list: T[]) {
-    if (arr.length !== size) {
-      return list.filter(row => {
-        const strs = toList(row)
-        const arr2 = typeof strs === 'string' ? [strs] : strs
-        return arr2.some(s => arr.includes(s))
-      })
-    }
-    return list
-  }
-
-  const component = (
-    <CheckboxGroup
-      label={label}
-      key={label}
-      orientation='horizontal'
-      color='primary'
-      defaultValue={init}
-      value={arr}
-      onValueChange={setArr}
-    >
-      {filterOptions.map(o => (
-        <Checkbox key={o.value} value={o.value}>
-          {o.name}
-        </Checkbox>
-      ))}
-    </CheckboxGroup>
-  )
-
-  return {
-    /** the Array of filtering strings that will show */
-    a: arr,
-    /** the Component that shows checkboxes for filter */
-    c: component,
-    /** use this to Filter the original list */
-    f: filter
-  }
-}
-
-export function useSearchFilter () {
-  const [filterValue, setFilterValue] = useState('')
-
-  function filter<T extends { searchName: string }> (list: T[]) {
-    if (!Boolean(filterValue)) return list
-    return list.filter(row => row.searchName.includes(filterValue))
-  }
-
-  const onListChange = useCallback((value?: string) => {
-    setFilterValue(value ?? '')
-  }, [])
-
-  const onClear = useCallback(() => {
-    setFilterValue('')
-  }, [])
-
-  const component = (
-    <Input
-      key='searchFilter'
-      isClearable
-      className='w-full sm:max-w-[44%]'
-      placeholder='Input text here...'
-      startContent={<FontAwesomeIcon icon={faMagnifyingGlass} />}
-      value={filterValue}
-      onClear={() => onClear()}
-      onValueChange={onListChange}
-    />
-  )
-
-  return {
-    /** the searching string */
-    a: filterValue,
-    /** the Component that shows checkboxes for filter */
-    c: component,
-    /** use this to Filter the original list */
-    f: filter
-  }
-}
 
 export function usePage<T> (filteredItems: T[]) {
   const rowSize = filteredItems.length

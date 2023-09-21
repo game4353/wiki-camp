@@ -1,15 +1,19 @@
-'use client'
-
 import { Locale } from '@/i18n-config'
-import { useCostumes } from './data'
-import { useFilters } from './filter'
-import { useMyPage } from '../myTemplate'
-import { columns } from './render'
+import { localItems } from './item'
+import { ClientComponent } from './client'
+import { getFilterProps } from './filter'
 
-export default function Costumes ({
-  params: { lang }
+export default async function ServerComponent ({
+  params: { lang },
+  searchParams
 }: {
   params: { lang: Locale }
+  searchParams: { [key: string]: string | string[] | undefined }
 }) {
-  return useMyPage(useCostumes(lang), useFilters(lang), columns)
+  const items = await localItems(lang)
+  const fp = await getFilterProps(lang)
+
+  return (
+    <ClientComponent lang={lang} items={items} filterProp={fp}/>
+  )
 }

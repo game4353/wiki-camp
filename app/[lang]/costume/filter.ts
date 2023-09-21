@@ -1,98 +1,42 @@
 import { Locale } from '@/i18n-config'
-import { useSearchFilter, useFilter, FilterKit } from '../main'
-import { CostumeItem } from './data'
-import { useText } from '@/app/master/main'
+import { type FilterProp } from '@/app/component/filter'
+import { kitApt, kitRare, kitSkillMission, kitType } from '@/app/component/filter/kits'
+import { serverText } from '@/app/master/server'
 
-export function useFilters (lang: Locale): FilterKit<CostumeItem>[] {
-  const text = useText(lang)
+export async function getFilterProps (lang: Locale): Promise<FilterProp> {
+  const textMap = await serverText(lang)
+
   return [
-    useSearchFilter(),
-    useFilter(
-      'Rare',
-      [
-        { name: 'SR', value: '3' },
-        { name: 'R', value: '2' },
-        { name: 'N', value: '1' }
-      ],
-      o => o.rare.toString()
-    ),
-    useFilter(
-      'Skill1',
-      [1, 2, 3].map(v => ({
-        name: text.map('CampText', 420003 + v),
-        value: v.toString()
-      })),
-      o =>
-        o.skill1?.skillLottery?.case_mission_type_ids?.split(',') ?? []
-    ),
-    useFilter(
-      'Skill2',
-      [1, 2, 3].map(v => ({
-        name: text.map('CampText', 420003 + v),
-        value: v.toString()
-      })),
-      o =>
-        o.skill2?.skillLottery?.case_mission_type_ids?.split(',') ?? []
-    ),
-    useFilter(
-      'Skill3',
-      [1, 2, 3].map(v => ({
-        name: text.map('CampText', 420003 + v),
-        value: v.toString()
-      })),
-      o =>
-        o.skill3?.skillLottery?.case_mission_type_ids?.split(',') ?? []
-    ),
-    useFilter(
-      'Type',
-      [1, 2, 3, 4, 5].map(v => ({
-        name: text.map('CampText', 410000 + v),
-        value: v.toString()
-      })),
-      o => o.type.toString()
-    ),
-    useFilter(
-      text.map('CampText', 420001),
-      [
-        { name: 'S', value: '8' },
-        { name: 'A', value: '7' },
-        { name: 'B', value: '6' },
-        { name: 'C', value: '5' },
-        { name: 'D', value: '4' },
-        { name: 'E', value: '3' },
-        { name: 'F', value: '2' },
-        { name: 'G', value: '1' }
-      ],
-      o => o.hot.toString()
-    ),
-    useFilter(
-      text.map('CampText', 420002),
-      [
-        { name: 'S', value: '8' },
-        { name: 'A', value: '7' },
-        { name: 'B', value: '6' },
-        { name: 'C', value: '5' },
-        { name: 'D', value: '4' },
-        { name: 'E', value: '3' },
-        { name: 'F', value: '2' },
-        { name: 'G', value: '1' }
-      ],
-      o => o.cold.toString()
-    ),
-    useFilter(
-      text.map('CampText', 420003),
-      [
-        { name: 'S', value: '8' },
-        { name: 'A', value: '7' },
-        { name: 'B', value: '6' },
-        { name: 'C', value: '5' },
-        { name: 'D', value: '4' },
-        { name: 'E', value: '3' },
-        { name: 'F', value: '2' },
-        { name: 'G', value: '1' }
-      ],
-      o => o.sport.toString()
-    ),
-    
+    { 
+      title: 'General', 
+      kits: [
+        kitRare(), 
+        kitType(textMap),
+        kitApt(textMap, 'hot'),
+        kitApt(textMap, 'cold'),
+        kitApt(textMap, 'sport'),
+      ] 
+    },
+    {
+      title: 'Skill 1',
+      kits: [
+        kitSkillMission(textMap, 'skillMission1'),
+        kitType(textMap, 'skillType1')
+      ]
+    },
+    {
+      title: 'Skill 2',
+      kits: [
+        kitSkillMission(textMap, 'skillMission2'),
+        kitType(textMap, 'skillType2')
+      ]
+    },
+    {
+      title: 'Skill 3',
+      kits: [
+        kitSkillMission(textMap, 'skillMission3'),
+        kitType(textMap, 'skillType3')
+      ]
+    }
   ]
 }

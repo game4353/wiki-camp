@@ -1,10 +1,6 @@
-import Aptitude from '@/app/component/aptitude'
 import Thumbnail from '@/app/component/thumbnail'
-import { Column } from '../main'
-import Skill from '../skill'
-import { LocalItem } from './item'
-import TurnEvent from '../event/turn'
-import { rare2text } from '@/app/util'
+import type { Column } from '../main'
+import type { LocalItem } from './item'
 
 export const localColumns: Column<LocalItem>[] = [
   { name: 'ID', uid: 'uid', hide: true },
@@ -25,7 +21,7 @@ export const localColumns: Column<LocalItem>[] = [
   },
   {
     name: 'NAME',
-    uid: 'nameC',
+    uid: 'name',
     show: true,
     render (item, textMap) {
       const cat = textMap('GearText', item.tid.category)
@@ -43,38 +39,7 @@ export const localColumns: Column<LocalItem>[] = [
     uid: 'rare',
     hide: true,
     render (item) {
-      return rare2text(item.rare)
-    }
-  },
-  {
-    name: 'APT',
-    uid: 'aptC',
-    show: true,
-    render (item) {
-      return (
-        <Aptitude
-          type='mission'
-          relax={item.relax}
-          play={item.play}
-          cook={item.cook}
-        />
-      )
-    }
-  },
-  {
-    name: 'SKILL',
-    uid: 'skillC',
-    show: true,
-    render (item) {
-      return <Skill lang={item.lang} layout='full' skill={item.skill} />
-    }
-  },
-  {
-    name: 'EVENT',
-    uid: 'event',
-    show: true,
-    render (item) {
-      return <TurnEvent lang={item.lang} layout='list' item={item.event} />
+      return ['', 'N', 'R', 'SR'][item.rare]
     }
   },
   {
