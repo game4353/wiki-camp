@@ -3,7 +3,7 @@ import { type FilterProp } from '@/app/component/filter'
 import { serverText } from '@/app/master/server'
 import {
   kitApt,
-  kitRare,
+  kitRareEn,
   kitSkillMission,
   kitType
 } from '@/app/component/filter/kits'
@@ -15,8 +15,7 @@ export async function getFilterProps (lang: Locale): Promise<FilterProp> {
     {
       title: 'General',
       kits: [
-        kitRare(),
-        kitType(textMap),
+        kitRareEn(),
         kitApt(textMap, 'relax'),
         kitApt(textMap, 'play'),
         kitApt(textMap, 'cook'),
