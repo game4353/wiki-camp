@@ -22,6 +22,7 @@ export default function FilterBlocks<T extends FilterItem> ({
             <div className='flex flex-col gap-2 p-2'>
               {v.kits.map(k => (
                 <FilterBoxes
+                  key={k.filterKey}
                   label={k.subtitle}
                   filterOptions={k.v}
                   filterKey={k.filterKey}
