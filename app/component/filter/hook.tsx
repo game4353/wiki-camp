@@ -1,6 +1,13 @@
 'use client'
 
-import { ReactNode, useCallback, useState } from 'react'
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState
+} from 'react'
 import { FilterItem, FilterKit, type FilterOption } from '.'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -89,12 +96,21 @@ export function useFilter<T> (
   }
 }
 
-
-export function useBoxFilter<T extends FilterItem> (
-  label: ReactNode,
-  filterOptions: FilterOption[],
+export function FilterBoxes<T extends FilterItem> ({
+  label,
+  filterKey,
+  filterOptions,
+  filters,
+  setFilters,
+  list
+}: {
+  label: ReactNode
+  filterOptions: FilterOption[]
   filterKey: string
-) {  
+  list: T[]
+  filters: Record<string, boolean[]>
+  setFilters: Dispatch<SetStateAction<Record<string, boolean[]>>>
+}) {
   const size = filterOptions.length
   const init = new Set(
     filterOptions
@@ -102,20 +118,23 @@ export function useBoxFilter<T extends FilterItem> (
       .map(o => o.value)
   )
   const [set, setSet] = useState(init)
-  
-  function filter (list: T[]) {
-    if (set.size !== size) {
-      return list.filter(row => {
-        const strs = row.filters[filterKey]
-        if (strs == null) return set.has('NULL')
-        const arr2 = typeof strs === 'string' ? [strs] : strs
-        return arr2.some(s => set.has(s))
-      })
-    }
-    return list
-  }
 
-  const component = (
+  useEffect(() => {
+    const newShow = list.map(o => {
+      if (set.size === size) return true
+      const strs = o.filters[filterKey]
+      if (strs == null) return set.has('NULL')
+      const arr2 = typeof strs === 'string' ? [strs] : strs
+      return arr2.some(s => set.has(s))
+    })
+    const show = filters[filterKey] ?? []
+    if (newShow.every((v, i) => v === show[i])) return
+    const newFilters = { ...filters }
+    newFilters[filterKey] = newShow
+    setFilters(newFilters)
+  }, [set, filters])
+
+  return (
     <FilterBox
       key={filterKey}
       label={label}
@@ -124,15 +143,6 @@ export function useBoxFilter<T extends FilterItem> (
       boxes={filterOptions}
     />
   )
-
-  return {
-    /** the Set of Strings that Show */
-    s: set,
-    /** the Component of Checkboxes */
-    c: component,
-    /** the Function to Filter */
-    f: filter
-  }
 }
 
 export function useSearchFilter () {

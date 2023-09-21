@@ -5,7 +5,7 @@ import { MyTabs } from './tab'
 import { MyTable } from './table'
 import type { Locale } from '@/i18n-config'
 import type { Selection } from '@nextui-org/react'
-import useFilters from '../filter/accordion'
+import FilterBlocks from '../filter/accordion'
 
 export default function MyPage<T extends { uid: string | number } & FilterItem> ({
   lang,
@@ -28,11 +28,18 @@ export default function MyPage<T extends { uid: string | number } & FilterItem> 
   //   () => filters.reduce((list, { f }) => f(list), items),
   //   [...filters.map(o => o.s)]
   // )
-  const filters = useFilters<T>({filterProp})
-  const filteredItems = useMemo(
-    () => filters.f(items),
-    [filters.f]
-  )
+  const [filterBools, setFilterBools] = useState<Record<string, boolean[]>>({})
+  const filters = <FilterBlocks<T> 
+    filterProp={filterProp}
+    list={items}
+    filters={filterBools}
+    setFilters={setFilterBools}
+    />
+
+    
+  const filteredItems = useMemo(() => {
+    return items.filter((_, i) => Object.values(filterBools).every(f => f[i]))
+  }, [items, filterBools])
   const sortedItems = filteredItems
 
   const tableComponent = (
@@ -50,13 +57,13 @@ export default function MyPage<T extends { uid: string | number } & FilterItem> 
   // const filterComponent = (
   //   <div className='flex flex-col gap-2 p-2'>{filters.map(o => o.c)}</div>
   // )
-  const filterComponent = filters.c
+  const filterComponent = filters
   const filterSize = filteredItems.length
   const selectedComponent = <div>TBD</div>
   const selectedSize = selectedKeys === 'all' ? items.length : selectedKeys.size
   const settingComponent = useMemo(() => {
     return <div className='flex flex-col gap-4'>{selectVisibleColumn}</div>
-  }, [selectedKeys, visibleColumns, /*...filters.map(o => o.s)*/ filters.f])
+  }, [selectedKeys, visibleColumns, /*...filters.map(o => o.s) filters.f*/])
 
   return (
     <MyTabs

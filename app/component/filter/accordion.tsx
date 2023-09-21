@@ -1,35 +1,39 @@
 import { Accordion, AccordionItem } from '@nextui-org/react'
 import { FilterItem, FilterProp } from '.'
-import { useBoxFilter } from './hook'
+import { FilterBoxes } from './hook'
+import { Dispatch, SetStateAction } from 'react'
 
-export default function useFilters<T extends FilterItem> ({
-  filterProp
+export default function FilterBlocks<T extends FilterItem> ({
+  filterProp,
+  list,
+  filters,
+  setFilters
 }: {
   filterProp: FilterProp
+  list: T[]
+  filters: Record<string, boolean[]>
+  setFilters: Dispatch<SetStateAction<Record<string, boolean[]>>>
 }) {
-  const filters = filterProp.map(({ kits }) =>
-    kits.map(kit => useBoxFilter<T>(kit.subtitle, kit.v, kit.filterKey))
-  )
-
-  const filter = (list: T[]) =>
-    filters.reduce((l, o) => o.reduce((l2, o2) => o2.f(l2), l), list)
-
-  const component = (
+  return (
     <div className='p-4 w-max min-w-[50%]'>
       <Accordion selectionMode='multiple' variant='bordered'>
         {filterProp.map((v, i) => (
           <AccordionItem startContent='．' key={i} title={v.title}>
             <div className='flex flex-col gap-2 p-2'>
-              {filters[i].map(o => o.c)}
+              {v.kits.map(k => (
+                <FilterBoxes
+                  label={k.subtitle}
+                  filterOptions={k.v}
+                  filterKey={k.filterKey}
+                  list={list}
+                  filters={filters}
+                  setFilters={setFilters}
+                />
+              ))}
             </div>
           </AccordionItem>
         ))}
       </Accordion>
     </div>
   )
-
-  return {
-    f: filter,
-    c: component
-  }
 }
