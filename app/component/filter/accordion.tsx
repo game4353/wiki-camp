@@ -2,25 +2,12 @@ import { Accordion, AccordionItem } from '@nextui-org/react'
 import { FilterItem, FilterProp } from '.'
 import { useBoxFilter } from './hook'
 
-export default function Filters<T extends FilterItem> ({
+export default function useFilters<T extends FilterItem> ({
   filterProp
 }: {
   filterProp: FilterProp
 }) {
-  const filteredData = filterProp.map(({ kits }) =>
-    kits.map(kit => ({
-      subtitle: kit.subtitle,
-      v: kit.v,
-      filterKey: kit.filterKey
-    }))
-  )
-
-  // Now, call useBoxFilter once for each kit and flatten the result
-  const filters: {
-    s: Set<string>
-    c: JSX.Element
-    f: (list: T[]) => T[]
-  }[][] = filteredData.map(kits =>
+  const filters = filterProp.map(({ kits }) =>
     kits.map(kit => useBoxFilter<T>(kit.subtitle, kit.v, kit.filterKey))
   )
 

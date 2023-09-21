@@ -5,7 +5,7 @@ import { MyTabs } from './tab'
 import { MyTable } from './table'
 import type { Locale } from '@/i18n-config'
 import type { Selection } from '@nextui-org/react'
-import Filters from '../filter/accordion'
+import useFilters from '../filter/accordion'
 
 export default function MyPage<T extends { uid: string | number } & FilterItem> ({
   lang,
@@ -28,7 +28,7 @@ export default function MyPage<T extends { uid: string | number } & FilterItem> 
   //   () => filters.reduce((list, { f }) => f(list), items),
   //   [...filters.map(o => o.s)]
   // )
-  const filters = Filters<T>({filterProp})
+  const filters = useFilters<T>({filterProp})
   const filteredItems = useMemo(
     () => filters.f(items),
     [filters.f]
