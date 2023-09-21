@@ -7,20 +7,22 @@ export default function Filters<T extends FilterItem> ({
 }: {
   filterProp: FilterProp
 }) {
+  const filteredData = filterProp.map(({ kits }) =>
+    kits.map(kit => ({
+      subtitle: kit.subtitle,
+      v: kit.v,
+      filterKey: kit.filterKey
+    }))
+  )
+
+  // Now, call useBoxFilter once for each kit and flatten the result
   const filters: {
     s: Set<string>
     c: JSX.Element
     f: (list: T[]) => T[]
-  }[][] = []
-  
-  for (const fp of filterProp) {
-    const arr = []
-    for (const kit of fp.kits) {
-      const f = useBoxFilter<T>(kit.subtitle, kit.v, kit.filterKey)
-      arr.push(f)
-    }
-    filters.push(arr)
-  }
+  }[][] = filteredData.map(kits =>
+    kits.map(kit => useBoxFilter<T>(kit.subtitle, kit.v, kit.filterKey))
+  )
 
   const filter = (list: T[]) =>
     filters.reduce((l, o) => o.reduce((l2, o2) => o2.f(l2), l), list)
