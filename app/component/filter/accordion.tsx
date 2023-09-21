@@ -7,11 +7,20 @@ export default function Filters<T extends FilterItem> ({
 }: {
   filterProp: FilterProp
 }) {
-  function getBoxFilter (kit: FilterProp[number]['kits'][number]) {
-    return useBoxFilter<T>(kit.subtitle, kit.v, kit.filterKey)
+  const filters: {
+    s: Set<string>
+    c: JSX.Element
+    f: (list: T[]) => T[]
+  }[][] = []
+  
+  for (const fp of filterProp) {
+    const arr = []
+    for (const kit of fp.kits) {
+      const f = useBoxFilter<T>(kit.subtitle, kit.v, kit.filterKey)
+      arr.push(f)
+    }
+    filters.push(arr)
   }
-
-  const filters = filterProp.map(({ kits }) => kits.map(getBoxFilter))
 
   const filter = (list: T[]) =>
     filters.reduce((l, o) => o.reduce((l2, o2) => o2.f(l2), l), list)
