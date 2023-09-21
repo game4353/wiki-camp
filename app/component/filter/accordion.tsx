@@ -7,9 +7,11 @@ export default function Filters<T extends FilterItem> ({
 }: {
   filterProp: FilterProp
 }) {
-  const filters = filterProp.map(({ kits }) =>
-    kits.map(kit => useBoxFilter<T>(kit.subtitle, kit.v, kit.filterKey))
-  )
+  function getBoxFilter (kit: FilterProp[number]['kits'][number]) {
+    return useBoxFilter<T>(kit.subtitle, kit.v, kit.filterKey)
+  }
+
+  const filters = filterProp.map(({ kits }) => kits.map(getBoxFilter))
 
   const filter = (list: T[]) =>
     filters.reduce((l, o) => o.reduce((l2, o2) => o2.f(l2), l), list)
