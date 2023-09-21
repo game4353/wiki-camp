@@ -3,6 +3,7 @@ import { NavItem } from './sidebar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBan,
+  faCalculator,
   faCampground,
   faCartShopping,
   faHandPointUp,
@@ -54,4 +55,9 @@ export const defaultNavItems: NavItem[] = [
     href: '/ng',
     icon: <FontAwesomeIcon icon={faBan} size='lg' />
   },
+  // {
+  //   label: 'Calculator',
+  //   href: '/calc',
+  //   icon: <FontAwesomeIcon icon={faCalculator} size='lg' />
+  // },
 ]

@@ -41,7 +41,7 @@ export default function RootLayout ({
     <html lang={params.lang}>
       <body className={inter.className}>
         <Providers>
-          <div className='grid min-h-screen grid-rows-[64px_1fr] bg-zinc-100 dark:bg-zinc-900'>
+          <div className='grid min-h-screen grid-rows-[64px_1fr] bg-stone-100 dark:bg-stone-800'>
             <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
             <div className={classNames({
               'grid row-start-2': true,

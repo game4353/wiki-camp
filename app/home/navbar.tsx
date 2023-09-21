@@ -7,6 +7,7 @@ import { faEllipsisVertical, faListUl } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { SetStateAction } from 'react'
 import ThemeSwitcher from './ThemeSwitcher'
+import FutureSwitcher from './FutureSwitcher'
 
 export default function Navbar ({
   sidebarOpen,
@@ -42,6 +43,7 @@ export default function Navbar ({
         <p className='font-bold text-lg'>wiki-camp</p>
       </div>
       <div className='flex-grow'></div> {/** spacer */}
+      <FutureSwitcher />
       <ThemeSwitcher />
       <LocaleSwitcher />
     </nav>
