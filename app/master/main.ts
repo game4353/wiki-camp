@@ -1,82 +1,7 @@
 import useSWRImmutable from 'swr/immutable'
-import { fetcher, isEmpty } from '../util'
+import { fetcher } from '../util'
 import { Locale } from '@/i18n-config'
-import { useMemo } from 'react'
-
-type ValidTextCategory =
-  | 'AdvertisementText'
-  | 'ApText'
-  | 'AppointmentText'
-  | 'ArText'
-  | 'AreaText'
-  | 'AttributeText'
-  | 'BannerText'
-  | 'BgmText'
-  | 'BoostGroupText'
-  | 'CampText'
-  | 'CampaignText'
-  | 'CardText'
-  | 'ChallengeText'
-  | 'ChapterText'
-  | 'CharaNaviText'
-  | 'CollectionText'
-  | 'CommonText'
-  | 'ConfessionText'
-  | 'CraftText'
-  | 'FeatureText'
-  | 'FeedText'
-  | 'FuncText'
-  | 'GachaText'
-  | 'GearText'
-  | 'GrowthRewardText'
-  | 'GuideMissionText'
-  | 'GuildCampText'
-  | 'GuildText'
-  | 'HelpText'
-  | 'HomeBgmText'
-  | 'HomeLayoutText'
-  | 'HomeText'
-  | 'InvitationText'
-  | 'ItemText'
-  | 'LocationText'
-  | 'LoginText'
-  | 'LotteryText'
-  | 'MemberText'
-  | 'PhotoText'
-  | 'PlayerTitleText'
-  | 'ProfileText'
-  | 'PuzzleText'
-  | 'QuestText'
-  | 'ReactionText'
-  | 'RelationshipText'
-  | 'RewardText'
-  | 'SeasonText'
-  | 'SeriesText'
-  | 'ShopTabText'
-  | 'ShopText'
-  | 'SituationText'
-  | 'SkillText'
-  | 'SpecialContentText'
-  | 'SpecialDialogText'
-  | 'StageText'
-  | 'StampText'
-  | 'StickerText'
-  | 'StillPictureText'
-  | 'StoryText'
-  | 'TeamBattleText'
-  | 'TipsText'
-  | 'UnitText'
-  | 'VrText'
-  | 'WorkText'
-  | 'YpText'
-
-function textMap (this: any, cat: ValidTextCategory, id?: number) {
-  const nil = '�'
-  if (id == null) return nil
-  const text = this?.[cat]?.map?.[id]
-  if (typeof text !== 'string') return nil
-  return text
-}
+import { textMap } from './text'
 
 export function useText (lang: Locale) {
   const o = useSWRImmutable(`/${lang}/api/text`, fetcher)
@@ -87,7 +12,7 @@ export function useText (lang: Locale) {
   }
 }
 
-async function masterFetcher<T> (path: string, idKey: ValidKey<T>) {
+export async function masterFetcher<T> (path: string, idKey: ValidKey<T>) {
   const response = await fetch(path)
   const data: T[] = await response.json()
   const dict: Partial<Record<number, T>> = Object.fromEntries(
