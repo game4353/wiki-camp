@@ -26,17 +26,7 @@ const nextConfig = {
     fileLoaderRule.exclude = /\.svg$/i
 
     return config
-  },  
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'yurucamp-game.enish.com',
-        port: '',
-        pathname: '/img/**',
-      },
-    ],
-  },
+  }
 }
 
 module.exports = nextConfig

@@ -9,7 +9,7 @@ export default function Home ({
   return (
     <div className='flex flex-col justify-center px-[10%]'>
       <Image
-        src='https://yurucamp-game.enish.com/img/logo_w.png?202304260727'
+        src='/images/HP/logo_w.png'
         alt=''
         width={640}
         height={260}
