@@ -25,14 +25,14 @@ export default function FutureSwitcher () {
 
   if (future)
     return (
-      <Tooltip color='danger' content='Future Sight' placement='bottom'>
+      <Tooltip color='danger' content='See Unreleased Data' placement='bottom'>
         <Button isIconOnly variant='light' onClick={switchFuture}>
           <FontAwesomeIcon icon={faEye} size='lg' />
         </Button>
       </Tooltip>
     )
   return (
-    <Tooltip color='danger' content='Future Sight' placement='bottom'>
+    <Tooltip color='danger' content='See Unreleased Data' placement='bottom'>
       <Button isIconOnly variant='light' onClick={switchFuture}>
         <FontAwesomeIcon icon={faEyeSlash} size='lg' />
       </Button>
