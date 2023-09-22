@@ -1,11 +1,6 @@
-'use client'
-
 import './globals.css'
+import Home from './home'
 import { Inter } from 'next/font/google'
-import { useEffect, useState } from 'react'
-import Sidebar from './home/sidebar'
-import Navbar from './home/navbar'
-import classNames from 'classnames'
 import { Locale, i18n } from '@/i18n-config'
 import { Providers } from './providers'
 
@@ -31,28 +26,13 @@ export default function RootLayout ({
   children: React.ReactNode
   params: { lang: Locale }
 }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  
-  useEffect(() => {
-    if (window.innerWidth >= 768) setSidebarOpen(true)
-  }, [])
-
   return (
     <html lang={params.lang}>
       <body className={inter.className}>
         <Providers>
-          <div className='grid min-h-screen grid-rows-[64px_1fr] bg-stone-100 dark:bg-stone-800'>
-            <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-            <div className={classNames({
-              'grid row-start-2': true,
-              'transition-grid-cols duration-300': true,
-              'grid-cols-[56px_minmax(0,1fr)]': !sidebarOpen,
-              'grid-cols-[200px_minmax(0,1fr)]': sidebarOpen
-            })}>
-              <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}></Sidebar>
-              <div className='col-start-2'>{children}</div>
-            </div>
-          </div>
+          <Home>
+            {children}
+          </Home>
         </Providers>
       </body>
     </html>
