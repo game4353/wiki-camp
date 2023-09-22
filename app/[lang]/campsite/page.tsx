@@ -1,11 +1,15 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Button } from 'primereact/button'
-import { Chip } from 'primereact/chip'
-import { DataView } from 'primereact/dataview'
-import { Dialog } from 'primereact/dialog'
-import { Rating } from 'primereact/rating'
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  useDisclosure,
+  Button,
+  Card,
+  CardBody
+} from '@nextui-org/react'
 import { Tag } from 'primereact/tag'
 import {
   Camp,
@@ -25,33 +29,16 @@ import {
   faCloudShowersHeavy,
   faCloudSun,
   faTemperatureFull,
-  faTemperatureHalf,
   faWind
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
-import { formatText } from '@/app/util'
-
-interface Product {
-  id: string
-  code: string
-  name: string
-  description: string
-  image: string
-  price: number
-  category: string
-  quantity: number
-  inventoryStatus: string
-  rating: number
-}
 
 export default function BasicDemo ({
   params: { lang }
 }: {
   params: { lang: Locale }
 }) {
-  const [visible, setVisible] = useState<number | undefined>(undefined)
-  const [products, setProducts] = useState<Camp[]>([])
   const camp = useMasterNew<Camp>(lang, 'camp', 'id')
   const campingArea = useMasterNew<CampCampingArea>(
     lang,
@@ -67,10 +54,6 @@ export default function BasicDemo ({
   const weather = useMasterNew<CampWeather>(lang, 'camp_weather', 'id')
   const wind = useMasterNew<CampWind>(lang, 'camp_wind', 'id')
   const text = useText(lang)
-
-  useEffect(() => {
-    setProducts(camp.get('all'))
-  }, [camp.l])
 
   const campsites = camp.get('all').filter(c => c.end_date * 1000 >= Date.now())
 
@@ -103,67 +86,86 @@ export default function BasicDemo ({
   const itemTemplate = (camp: Camp) => {
     const area = getArea(camp)
     return (
-      <div className='p-col-12'>
-        <div className='p-flex p-flex-column xl:p-flex-row xl:p-align-items-start p-p-4 p-gap-4'>
-          <img
-            className='p-w-9 sm:p-w-16rem xl:p-w-10rem p-shadow-2 p-block xl:p-block p-mx-auto p-border-round'
-            src={area.src}
-            alt={getName(camp)}
-          />
-          <div className='p-flex p-flex-column sm:p-flex-row p-justify-content-between p-align-items-center xl:p-align-items-start p-flex-1 p-gap-4'>
-            <div className='p-flex p-flex-column p-align-items-center sm:p-align-items-start p-gap-3'>
-              <div className='p-text-2xl p-font-bold p-text-900'>
-                {getName(camp)}
+      <Card>
+        <CardBody>
+          <div className='p-flex p-flex-column xl:p-flex-row xl:p-align-items-start p-p-4 p-gap-4'>
+            <img
+              className='p-w-9 sm:p-w-16rem xl:p-w-10rem p-shadow-2 p-block xl:p-block p-mx-auto p-border-round'
+              src={area.src}
+              alt={getName(camp)}
+            />
+            <div className='p-flex p-flex-column sm:p-flex-row p-justify-content-between p-align-items-center xl:p-align-items-start p-flex-1 p-gap-4'>
+              <div className='p-flex p-flex-column p-align-items-center sm:p-align-items-start p-gap-3'>
+                <div className='p-text-2xl p-font-bold'>{getName(camp)}</div>
+                <div className='p-flex p-align-items-center p-gap-3'>
+                  {area.name}
+                  <Tag value={area.location} />
+                </div>
+                <div className='p-flex p-align-items-center p-gap-3'>
+                  {chip(faCalendarDays, camp.month)}
+                  {chip(
+                    faCloudSun,
+                    text.map(
+                      'CampText',
+                      weather.get(camp.weather)?.name_text_id
+                    )
+                  )}
+                  {chip(faCloudShowersHeavy, `${camp.chance_of_rain ?? 0}%`)}
+                  {chip(
+                    faWind,
+                    text.map('CampText', wind.get(camp.wind)?.name_text_id)
+                  )}
+                  {chip(
+                    faTemperatureFull,
+                    text.map(
+                      'CampText',
+                      temperature.get(camp.temperature)?.name_text_id
+                    )
+                  )}
+                </div>
               </div>
-              <div className='p-flex p-align-items-center p-gap-3'>
-                {area.name}
-                <Tag value={area.location} />
-              </div>
-              <div className='p-flex p-align-items-center p-gap-3'>
-                {chip(faCalendarDays, camp.month)}
-                {chip(
-                  faCloudSun,
-                  text.map('CampText', weather.get(camp.weather)?.name_text_id)
-                )}
-                {chip(faCloudShowersHeavy, `${camp.chance_of_rain ?? 0}%`)}
-                {chip(
-                  faWind,
-                  text.map('CampText', wind.get(camp.wind)?.name_text_id)
-                )}
-                {chip(
-                  faTemperatureFull,
-                  text.map(
-                    'CampText',
-                    temperature.get(camp.temperature)?.name_text_id
-                  )
-                )}
-              </div>
-            </div>
-            <div className='p-flex sm:p-flex-column p-align-items-center sm:p-align-items-end p-gap-3 sm:p-gap-2'>
-              <div className='p-card p-flex p-justify-content-center'>
-                <Button onClick={() => setVisible(camp.id)}>
-                  <FontAwesomeIcon icon={faCircleInfo} />
-                </Button>
-                <Dialog
-                  header={area.name}
-                  visible={visible === camp.id}
-                  style={{ width: '50vw' }}
-                  onHide={() => setVisible(undefined)}
-                >
-                  {/* {area.desc.split('\n').map((t, i) => (<p key={i} className='p-m-0'>{t}</p>))} */}
-                  <p className='p-m-0'>{formatText(area.desc)}</p>
-                </Dialog>
+              <div className='p-flex sm:p-flex-column p-align-items-center sm:p-align-items-end p-gap-3 sm:p-gap-2'>
+                <div className='p-flex p-justify-content-center'>
+                  <Popup title={area.name} content={area.desc} />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </CardBody>
+      </Card>
     )
   }
 
   return (
-    <div className='p-4 bg-stone-300'>
-      <DataView value={campsites} itemTemplate={itemTemplate} />
-    </div>
+    <div className='flex flex-col gap-3 p-4'>{campsites.map(itemTemplate)}</div>
+  )
+}
+
+function Popup ({ title, content }: { title: string; content: string }) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+
+  return (
+    <>
+      <Button onPress={onOpen} color='primary'>
+        <FontAwesomeIcon icon={faCircleInfo} />
+      </Button>
+      <Modal
+        size='3xl'
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        scrollBehavior='inside'
+      >
+        <ModalContent>
+          {onClose => (
+            <>
+              <ModalHeader className='flex flex-col gap-1'>{title}</ModalHeader>
+              <ModalBody>
+                <pre>{content}</pre>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
