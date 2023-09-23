@@ -7,10 +7,11 @@ import {
   CardCampProperty
 } from '@/app/master/main'
 import { Locale } from '@/i18n-config'
-import { num, rare2text } from '@/app/util'
+import { num } from '@/app/util'
 import { serverMaster, serverText } from '@/app/master/server'
 import { localItems as skillItems } from '../skill/item'
 import { localItems as turnEventItems } from '../event/turn/item'
+import type { FilterItem } from '@/app/component/filter'
 
 export async function localItems (lang: Locale) {
   const data = {
@@ -60,23 +61,23 @@ export async function localItems (lang: Locale) {
       throw new Error(`unable to find turn event ${eid}`)
     }
 
-    const filterSet: Record<string, Set<string>> = {}
+    const filters: FilterItem['filters'] = {
+      General: {
+        rare,
+        type
+      },
+      Skill: skill.filters,
+      Event: event.filters
+    }
+    const filterSet: Record<string, Set<number>> = {}
     ses.forEach(se => {
       const k = `eff${se.effect_target_type}`
       filterSet[k] = filterSet[k] ?? new Set()
-      filterSet[k].add(num(se.effect_target_param).toString())
+      filterSet[k].add(num(se.effect_target_param))
     })
-    const filters = Object.fromEntries(
+    filters['Effect'] = Object.fromEntries(
       Object.entries(filterSet).map(([k, v]) => [k, [...v]])
     )
-    filters['rare'] = [rare2text(rare)]
-    filters['type'] = [type.toString()]
-    filters['skillType'] = skill.skillEffects.map(v =>
-      v.effect_target_param.toString()
-    )
-    filters['skillPhase'] = [String(skill.skillLottery.mission_phase_type)]
-    filters['skillMission'] =
-      skill.skillLottery.case_mission_type_ids?.split(',') ?? []
 
     return {
       lang,

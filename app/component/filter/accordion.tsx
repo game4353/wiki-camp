@@ -1,34 +1,37 @@
-import { Accordion, AccordionItem } from '@nextui-org/react'
-import { FilterItem, FilterProp } from '.'
-import { FilterBoxes } from './hook'
-import { Dispatch, SetStateAction } from 'react'
+'use client'
 
-export default function FilterBlocks<T extends FilterItem> ({
+import { Accordion, AccordionItem, Selection } from '@nextui-org/react'
+import type { FilterProp } from '.'
+import type { Dispatch, SetStateAction } from 'react'
+import { FilterBoxes as FilterBoxes2 } from './box'
+
+export function FilterAccordion ({
   filterProp,
-  list,
-  filters,
-  setFilters
+  accordionState
 }: {
   filterProp: FilterProp
-  list: T[]
-  filters: Record<string, boolean[]>
-  setFilters: Dispatch<SetStateAction<Record<string, boolean[]>>>
+  accordionState: [Selection, Dispatch<SetStateAction<Selection>>]
 }) {
+  const [selectedKeys, setSelectedKeys] = accordionState
+
   return (
     <div className='p-4 w-max min-w-[50%]'>
-      <Accordion selectionMode='multiple' variant='bordered'>
+      <Accordion
+        selectionMode='multiple'
+        variant='bordered'
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+      >
         {filterProp.map((v, i) => (
           <AccordionItem startContent='．' key={i} title={v.title}>
             <div className='flex flex-col gap-2 p-2'>
-              {v.kits.map(k => (
-                <FilterBoxes
-                  key={k.filterKey}
-                  label={k.subtitle}
-                  filterOptions={k.v}
-                  filterKey={k.filterKey}
-                  list={list}
-                  filters={filters}
-                  setFilters={setFilters}
+              {v.kits.map(kit => (
+                <FilterBoxes2
+                  boxes={kit.v}
+                  label={kit.subtitle}
+                  uid={kit.filterKey}
+                  parentPaths={[v.title]}
+                  key={kit.filterKey}
                 />
               ))}
             </div>

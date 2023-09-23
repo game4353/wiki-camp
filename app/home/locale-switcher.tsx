@@ -9,10 +9,13 @@ import { usePathname, useRouter } from 'next/navigation'
 import { Locale, i18n } from '@/i18n-config'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { set } from '@/redux/features/languageSlice'
+import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 
 export default function LocaleSwitcher () {
   const pathName = usePathname()
   const router = useRouter()
+  const dispatch = useAppDispatch()
 
   const redirectedPathName = (locale: string) => {
     if (!pathName) return '/'
@@ -22,6 +25,8 @@ export default function LocaleSwitcher () {
   }
 
   function handleLanguageChange (lang: Locale) {
+    dispatch(set(lang))
+    // ↓ not needed
     router.push(redirectedPathName(lang))
   }
 
@@ -42,4 +47,8 @@ export default function LocaleSwitcher () {
       </DropdownMenu>
     </Dropdown>
   )
+}
+
+export function useLanguage() {
+  return useAppSelector(state => state.languageReducer.value)
 }

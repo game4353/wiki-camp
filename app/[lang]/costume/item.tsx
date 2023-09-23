@@ -11,6 +11,7 @@ import { serverMaster, serverText } from '@/app/master/server'
 import { num } from '@/app/util'
 import { localItems as skillItems } from '../skill/item'
 import { localItems as turnEventItems } from '../event/turn/item'
+import type { FilterItem } from '@/app/component/filter'
 
 export async function localItems (lang: Locale) {
   const data = {
@@ -68,25 +69,20 @@ export async function localItems (lang: Locale) {
     const cold = num(ccp.coldness)
     const sport = num(ccp.sporty)
 
-    const filters: Partial<Record<string, string[]>> = {}
-    filters['rare'] = [rare.toString()]
-    filters['type'] = [type.toString()]
-    filters['chara'] = [o.member_id.toString()]
-    filters['hot'] = [hot.toString()]
-    filters['cold'] = [cold.toString()]
-    filters['sport'] = [sport.toString()]
-    for (const i of [1, 2, 3]) {
-      filters[`skillType${i}`] =
-        skills[i - 1]?.skillEffects?.map(v =>
-          v.effect_target_param.toString()
-        ) ?? []
-      filters[`skillPhase${i}`] = [
-        String(skills[i - 1]?.skillLottery.mission_phase_type ?? '')
-      ]
-      filters[`skillMission${i}`] =
-        skills[i - 1]?.skillLottery.case_mission_type_ids?.split(',') ?? []
+    const filters: FilterItem['filters'] = {
+      General: {
+        rare,
+        type,
+        hot,
+        cold,
+        sport,
+        chara: o.member_id
+      },
+      'Skill 1': skills[0]?.filters,
+      'Skill 2': skills[1]?.filters,
+      'Skill 3': skills[2]?.filters,
     }
-
+    
     return {
       lang,
       uid: id,

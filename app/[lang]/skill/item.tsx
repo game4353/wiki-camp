@@ -7,6 +7,8 @@ import type {
   CampSkillTrick
 } from '@/app/master/main'
 import { serverMaster, serverText } from '@/app/master/server'
+import type { FilterItem } from '@/app/component/filter'
+import { num } from '@/app/util'
 
 export async function localItems (lang: Locale) {
   const data = {
@@ -58,8 +60,24 @@ export async function localItems (lang: Locale) {
       throw new Error(`unable to find camp skill lottery ${sgid}`)
     }
 
+    const filters: FilterItem['filters'] = {
+      mission: (sl.case_mission_type_ids ?? '').split(',').map(num),
+      type: skillEffects.map(v => v.effect_target_param),
+      phase: sl.mission_phase_type,
+      leader: num(sl.case_leader_member),
+      area: num(sl.case_camping_area),
+      location: num(sl.case_location),
+      season: num(sl.case_season),
+      temperature: [
+        sl.case_temperature_greater_equal ?? -999,
+        sl.case_temperature_less_equal ?? 999
+      ],
+      sp
+    }
+
     return {
       uid: o.id,
+      filters,
       sgid,
       level,
       tid: {

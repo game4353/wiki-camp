@@ -2,7 +2,7 @@ import type { Locale } from '@/i18n-config'
 import type { Item } from '@/app/master/main'
 import type { CraftRecipe, Gear, GearProperty } from '@/app/master/main'
 import { serverMaster, serverText } from '@/app/master/server'
-import { num, rare2text } from '@/app/util'
+import { num } from '@/app/util'
 import { localItems as skillItems } from '../skill/item'
 import { localItems as turnEventItems } from '../event/turn/item'
 import type { FilterItem } from '@/app/component/filter'
@@ -57,15 +57,15 @@ export async function localItems (lang: Locale) {
     )?.gear_text_id
 
     const filters: FilterItem['filters'] = {
-      rare: [rare2text(o.rarity)],
-      skillType: skill.skillEffects.map(v => v.effect_target_param.toString()),
-      skillPhase: [String(skill.skillLottery.mission_phase_type)],
-      skillMission: skill.skillLottery.case_mission_type_ids?.split(',') ?? [],
-      relax: [relax.toString()],
-      play: [play.toString()],
-      cook: [cook.toString()],
-      category: [o.category.toString()],
-      ...event.filters
+      General: {
+        rare: o.rarity,
+        relax,
+        play,
+        cook,
+        category: o.category
+      },
+      Skill: skill.filters,
+      Event: event.filters
     }
 
     return {

@@ -1,18 +1,9 @@
 import type { FilterProp } from '@/app/component/filter'
+import { kitRare } from '@/app/component/filter/kits'
 
 export const filterProp: FilterProp = [
   {
     title: 'General',
-    kits: [
-      {
-        subtitle: 'Rare',
-        v: [
-          { name: 'SR', value: 'SR' },
-          { name: 'R', value: 'R' },
-          { name: 'N', value: 'N' }
-        ],
-        filterKey: 'rare'
-      }
-    ]
+    kits: [kitRare()]
   }
 ]

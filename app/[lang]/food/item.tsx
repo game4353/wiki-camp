@@ -1,17 +1,17 @@
-import { CraftRecipe, Gear, Item } from "@/app/master/main";
-import { serverMaster, serverText } from "@/app/master/server";
-import { num, rare2text } from "@/app/util";
-import { Locale } from "@/i18n-config";
+import { FilterItem } from '@/app/component/filter'
+import { CraftRecipe, Gear, Item } from '@/app/master/main'
+import { serverMaster, serverText } from '@/app/master/server'
+import { num } from '@/app/util'
+import { Locale } from '@/i18n-config'
 
-export async function localItems(lang: Locale) {
+export async function localItems (lang: Locale) {
   const data = {
     cr: await serverMaster<CraftRecipe>(lang, 'craft_recipe'),
     gear: await serverMaster<Gear>(lang, 'gear'),
-    item: await serverMaster<Item>(lang, 'item'),
+    item: await serverMaster<Item>(lang, 'item')
   }
   const textMap = await serverText(lang)
 
-  
   function toItem (o: Gear) {
     const name = textMap('GearText', o.gear_text_id)
 
@@ -26,14 +26,21 @@ export async function localItems(lang: Locale) {
         return { id, n, name: item?.name_text_id }
       })
       .filter((v): v is { id: number; n: number; name: number } => v != null)
-    const requireGear = data.gear.find(v => v.id === cr?.material_gear_id)?.gear_text_id
+    const requireGear = data.gear.find(
+      v => v.id === cr?.material_gear_id
+    )?.gear_text_id
+
+    const filters: FilterItem['filters'] = {
+      General: {
+        rare: o.rarity,
+        category: o.category
+      }
+    }
 
     return {
       uid: o.id,
       searchName: name,
-      filters: {
-        rare: [rare2text(o.rarity)]
-      },
+      filters,
       tid: {
         category: 1000 + o.category * 10,
         subCategory: 1000 + o.category * 10 + o.sub_category,
@@ -44,7 +51,7 @@ export async function localItems(lang: Locale) {
       materials
     }
   }
-  
+
   return Object.values(data.gear)
     .filter(o => o.type === 2)
     .map(toItem)

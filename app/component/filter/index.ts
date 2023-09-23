@@ -1,33 +1,48 @@
 import { type ReactNode } from 'react'
-export { FilterBox } from './box'
-export { useFilters, useFilter, useSearchFilter } from './hook'
-
-/** this stands for absent of a filter type */
-export const NULL = 'NULL'
 
 export type FilterItem = {
-  filters: Partial<Record<string, string | string[]>>
+  filters: Record<string, any>
+}
+
+export enum FilterMode {
+  /** `itemValue` is undefined or empty array or empty set */
+  EMPTY,
+  /** `itemValue: T` === `filterValue: T` */
+  IS,
+  /** `itemValue: T` is in `filterValue: T | T[]` */
+  IN,
+  /** `filterValue: T` is in `itemValue: T | T[]` */
+  HAS,
+  // /** `itemValue: T[]` fully contains `filterValue: T[]` */
+  // SUPEQ,
+  // /** `itemValue: string` is a superstring of `filterValue: string` */
+  // SUPSTR,
+  /** `itemValue: number` is in the range of `filterValue: [number, number]`*/
+  BETWEEN,
+  /** `filterValue: number` is in the range of `itemValue: [number, number]`*/
+  ENCLOSE,
+  /** `itemValue: number` < `filterValue: number`*/
+  LESS,
+  /** `itemValue: number` > `filterValue: number`*/
+  GTR,
+  // /** `itemValue: number` <= `filterValue: number`*/
+  // LEQ,
+  // /** `itemValue: number` >= `filterValue: number`*/
+  // GEQ,
+  /** `itemValue: any[]` has length `filterValue: number` */
+  SIZE,
 }
 
 export type FilterOption = {
+  mode: FilterMode
+  /** unique string for path */
+  uid: string
   /** name displays beside checkbox */
-  name: ReactNode
-  /** unique string for filter */
-  value: string
+  name: Exclude<ReactNode, null | undefined>
+  /** filter value */
+  value: any
   /** filtered out at start */
   hide?: boolean
-}
-
-export type FilterKit<T> = {
-  s: string | Set<string>
-  c: JSX.Element
-  f: (list: T[]) => T[]
-}
-
-export type FilterParams<T> = {
-  title: ReactNode
-  options: FilterOption[]
-  toList(o: T): string | string[]
 }
 
 export type FilterProp = {
@@ -38,3 +53,31 @@ export type FilterProp = {
     filterKey: string
   }[]
 }[]
+
+/** [Defaults] 
+ * 
+ *  mode = FilterMode.HAS
+ * 
+ *  uid = name.toString()
+ * 
+ *  value = uid
+ * 
+ *  hide = false
+ */
+export function defaultOption({
+  mode, uid, name, value, hide
+}:{
+  mode?: FilterMode
+  uid?: string
+  name: Exclude<ReactNode, null | undefined>
+  value?: any
+  hide?: boolean
+}) {
+  return {
+    name,
+    mode: mode ?? FilterMode.HAS,
+    uid: uid ?? name.toString(),
+    value: value ?? uid ?? name.toString(),
+    hide,
+  }
+}

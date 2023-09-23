@@ -2,7 +2,7 @@ import type { CampFriendship, CampTurnEvent } from '@/app/master/main'
 import type { Locale } from '@/i18n-config'
 import { STATS, num } from '@/app/util'
 import { serverMaster } from '@/app/master/server'
-import { FilterItem, NULL } from '@/app/component/filter'
+import type { FilterItem } from '@/app/component/filter'
 
 export async function localItems (lang: Locale) {
   const data = {
@@ -23,12 +23,12 @@ export async function localItems (lang: Locale) {
       .map(v => [num(v.chara_id), v.friendship_point])
 
     const filters: FilterItem['filters'] = {
-      skillPt: String(num(o.skill_pt)),
-      condition: String(num(o.condition_id)),
-      motivation: String(num(o.motivation)),
-      friendship: friendship.map(([c]) => String(c))
+      skillPt: num(o.skill_pt),
+      condition: num(o.condition_id),
+      motivation: num(o.motivation),
+      friendship: friendship.map(([c]) => c)
     }
-    STATS.forEach(v => (filters[v] = String(num(o[v]))))
+    STATS.forEach(v => (filters[v] = num(o[v])))
 
     return {
       uid: o.id,
