@@ -7,6 +7,7 @@ import type { Locale } from '@/i18n-config'
 import type { Selection } from '@nextui-org/react'
 import { FilterAccordion } from '../filter/accordion'
 import { useFiltered } from '../filter/hook'
+import WIP from '@/app/template/wip'
 
 export default function MyPage<
   T extends { uid: string | number } & FilterItem
@@ -43,7 +44,7 @@ export default function MyPage<
     <FilterAccordion filterProp={filterProp} accordionState={accordionState} />
   )
   const filterSize = filteredItems.length
-  const selectedComponent = <div>TBD</div>
+  const selectedComponent = <WIP/>
   const selectedSize = selectedKeys === 'all' ? items.length : selectedKeys.size
   const settingComponent = useMemo(() => {
     return <div className='flex flex-col gap-4'>{selectVisibleColumn}</div>

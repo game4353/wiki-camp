@@ -141,7 +141,62 @@ export type Camp = {
   healing_cap: number
   aptitude_adjust_group: number
 }
-
+export type CampAction = {
+  id: number
+  action_type: number
+  action_level: number
+  motivation: number
+  is_success?: number
+  story_id: number
+  name_text_id: number
+  relationship?: number
+  satisfaction?: number
+  comfortableness?: number
+  warmth?: number
+  healing?: number
+  skill_pt?: number
+  health?: number
+  motivation_group_id: number
+  camp_friendship_group_id?: number
+}
+export type CampActionFail = {
+  id: number
+  health_done?: number
+  percentage?: number
+}
+export type CampActionLevel = {
+  id: number
+  action_type: number
+  action_level: number
+  required_count?: number
+}
+export type CampActionMotivation = {
+  id: number
+  group_id: number
+  motivation?: number
+  weight: number
+}
+export type CampActionType = {
+  id: number
+  action_type: number
+  name_text_id: number
+}
+export type CampAptitudeAdjust = {
+  id: number
+  group: number
+  adjust_type: number
+  aptitude_rank_type: number
+  adjust_value: number
+}
+export type CampAptitudeAdjustCoefficient = {
+  id: number
+  adjust_type: number
+  relationship: number
+  satisfaction: number
+  comfortableness: number
+  warmth: number
+  healing: number
+}
 export type CampCampingArea = {
   id: number
   name_text_id: number
@@ -165,6 +220,10 @@ export type CampCondition = {
   display_type?: number
   require_season?: number
 }
+export type CampForbiddenType = {
+  id: number
+  name_text_id: number
+}
 export type CampFriendship = {
   id: number
   group_id: number
@@ -172,9 +231,84 @@ export type CampFriendship = {
   chara_id?: number
   friendship_point: number
 }
+export type CampKeyword = {
+  id: number
+  text_id: number
+}
 export type CampLocation = {
   id: number
   name_text_id: number
+}
+export type CampMember = {
+  id: number
+  camp_id: number
+  chara_id: number
+  is_leader?: number
+}
+export type CampMission = {
+  id: number
+  name_text_id: number
+  pre_story_id?: number
+  mission_type: number
+  weight_relationship?: number
+  weight_satisfaction?: number
+  weight_comfortableness?: number
+  weight_warmth?: number
+  weight_healing?: number
+  eval_total_param_min?: number
+  eval_total_param_max?: number
+  score_total_param_min?: number
+  score_total_param_max?: number
+  eval_total_param_jackup?: number
+  status_calc_multiplier?: number
+  start_camp_site_id: number
+}
+export type CampMissionEval = {
+  id: number
+  camp_mission_id: number
+  camp_mission_eval_rank: number
+  excepted_threathold?: number
+  eval_param_n: number
+  eval_probability_min?: number
+  eval_probability_max?: number
+  score_param_n: number
+  score_multiplier_min: number
+  score_multiplier_max: number
+  reward_slot_num: number
+  reward_rainbow_weight?: number
+  reward_gold_weight?: number
+  reward_silver_weight?: number
+  mission_clear_reward_ids: string
+  status_calc_relationship: number
+  status_calc_satisfaction: number
+  status_calc_comfortableness: number
+  status_calc_warmth: number
+  status_calc_healing: number
+  end_camp_site_id: number
+}
+export type CampMissionLottery = {
+  id: number
+  camp_timeline_id: number
+  camp_mission_id: number
+  bind_timeline_id?: number
+  bind_mission_id?: number
+  weight: number
+}
+export type CampMissionPhase = {
+  id: number
+  camp_mission_id: number
+  seq: number
+  phase_type: number
+  success_prob_min?: number
+  success_prob_max?: number
+  success_prob_n: number
+  phase_desc_text_id: number
+  story_id: number
+  fail_story_id: number
+}
+export type CampMissionPhaseType = {
+  id: number
+  phase_type_text_id: number
 }
 export type CampSkill = {
   id: number
@@ -266,6 +400,14 @@ export type CampSupportEffectGroup = {
 export type CampTemperature = {
   id: number
   name_text_id: number
+}
+export type CampTimeline = {
+  id: number
+  camp_id: number
+  camp_term_id: number
+  turns: number
+  camp_site_id: number
+  has_chilltime?: number
 }
 export type CampTurnEvent = {
   id: number

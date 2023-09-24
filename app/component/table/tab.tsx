@@ -25,7 +25,7 @@ export function MyTabs ({
   settingComponent: JSX.Element
 }) {
   return (
-    <div>
+    <div className='min-h-full max-h-full grid grid-rows-[auto_minmax(0,1fr)]'>
       <Tabs aria-label='Options' color='primary' variant='underlined'>
         <Tab
           key='list'
@@ -40,6 +40,7 @@ export function MyTabs ({
         </Tab>
         <Tab
           key='filter'
+          className='min-w-0 max-w-full'
           title={
             <div className='flex items-center space-x-2'>
               <FontAwesomeIcon icon={faFilter} />
