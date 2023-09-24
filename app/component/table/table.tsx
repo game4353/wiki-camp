@@ -34,7 +34,7 @@ export function MyTable<T extends { uid: number | string }> ({
       bottomContent={pageComponent}
       bottomContentPlacement='outside'
       classNames={{
-        base: 'min-h-0 max-h-full w-min-full w-fit',
+        base: 'min-h-0 max-h-full min-w-full w-fit',
         wrapper: 'min-h-0 max-h-full'
       }}
       selectedKeys={selectedKeys}

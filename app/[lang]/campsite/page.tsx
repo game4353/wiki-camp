@@ -67,18 +67,19 @@ export default function BasicDemo ({
   const weather = useMasterNew<CampWeather>(lang, 'camp_weather', 'id')
   const wind = useMasterNew<CampWind>(lang, 'camp_wind', 'id')
   const text = useText(lang)
+  const textMap = text.map
 
   const campsites = camp.get('all').filter(c => c.end_date * 1000 >= Date.now())
 
   const getName = (camp: Camp) => {
-    return text.map('CampText', camp.name_text_id)
+    return textMap('CampText', camp.name_text_id)
   }
 
   function getArea (camp: Camp) {
     const area = campingArea.get(camp.camping_area_id)
-    const name = text.map('CampText', area?.name_text_id)
-    const desc = text.map('CampText', area?.desc_text_id)
-    const loca = text.map(
+    const name = textMap('CampText', area?.name_text_id)
+    const desc = textMap('CampText', area?.desc_text_id)
+    const loca = textMap(
       'CampText',
       location.get(area?.location_id)?.name_text_id
     )
@@ -98,8 +99,9 @@ export default function BasicDemo ({
   const missionTemplate = (camp: Camp) => {
     return (
       <div className='flex flex-row gap-2'>
-        {getMissions(camp).map(o => (
+        {getMissions(camp).map((o, i) => (
           <Icon
+            key={i}
             name={
               (['relax', 'play', 'cook'] as const)[num(o?.mission_type) - 1]
             }
@@ -118,7 +120,7 @@ export default function BasicDemo ({
     )
   }
 
-  const itemTemplate = (camp: Camp) => {
+  function itemTemplate (camp: Camp) {
     const area = getArea(camp)
     return (
       <Card as={Link} href={`./campsite/${camp.id}`}>
@@ -141,19 +143,16 @@ export default function BasicDemo ({
                   {chip(faCalendarDays, camp.month)}
                   {chip(
                     faCloudSun,
-                    text.map(
-                      'CampText',
-                      weather.get(camp.weather)?.name_text_id
-                    )
+                    textMap('CampText', weather.get(camp.weather)?.name_text_id)
                   )}
                   {chip(faCloudShowersHeavy, `${camp.chance_of_rain ?? 0}%`)}
                   {chip(
                     faWind,
-                    text.map('CampText', wind.get(camp.wind)?.name_text_id)
+                    textMap('CampText', wind.get(camp.wind)?.name_text_id)
                   )}
                   {chip(
                     faTemperatureFull,
-                    text.map(
+                    textMap(
                       'CampText',
                       temperature.get(camp.temperature)?.name_text_id
                     )
@@ -174,7 +173,11 @@ export default function BasicDemo ({
 
   return (
     <div className='min-h-0 max-h-full overflow-auto'>
-    <div className='flex flex-col gap-3 p-4'>{campsites.map(itemTemplate)}</div>
+      <div className='flex flex-col gap-3 p-4'>
+        {campsites.map(camp => (
+          <div key={camp.id}>{itemTemplate(camp)}</div>
+        ))}
+      </div>
     </div>
   )
 }
