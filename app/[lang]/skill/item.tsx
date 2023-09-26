@@ -9,6 +9,14 @@ import type {
 import { serverMaster, serverText } from '@/app/master/server'
 import type { FilterItem } from '@/app/component/filter'
 import { num } from '@/app/util'
+import { cache } from 'react'
+import 'server-only'
+ 
+export const preload = (lang: Locale) => {
+  void getItems(lang)
+}
+ 
+export const getItems = cache(localItems)
 
 export async function localItems (lang: Locale) {
   const data = {
@@ -60,9 +68,18 @@ export async function localItems (lang: Locale) {
       throw new Error(`unable to find camp skill lottery ${sgid}`)
     }
 
-    const filters: FilterItem['filters'] = {
+    const filters = {
       mission: (sl.case_mission_type_ids ?? '').split(',').map(num),
+      rare: csg.rarity,
       type: skillEffects.map(v => v.effect_target_param),
+      value1: skillEffects
+        .filter(v => v.effect_calc_type === 1)
+        .map(v => v.effect_value)
+        .reduce((a, b) => a + b, 0),
+      value2: skillEffects
+        .filter(v => v.effect_calc_type === 2)
+        .map(v => v.effect_value)
+        .reduce((a, b) => a + b, 0),
       phase: sl.mission_phase_type,
       leader: num(sl.case_leader_member),
       area: num(sl.case_camping_area),
@@ -73,7 +90,7 @@ export async function localItems (lang: Locale) {
         sl.case_temperature_less_equal ?? 999
       ],
       sp
-    }
+    } satisfies FilterItem['filters']
 
     return {
       uid: o.id,

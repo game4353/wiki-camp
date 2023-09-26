@@ -131,7 +131,6 @@ export function useFiltered<T extends { uid: string | number } & FilterItem> (
         ]
       )
       shows.forEach((v, i) => (bools[i] &&= v))
-      if (shows.every(v => v === false)) console.log(kit, items[80])
     })
   }
   return items.filter((_, i) => bools[i])

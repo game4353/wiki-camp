@@ -4,6 +4,15 @@ import { serverMaster, serverText } from '@/app/master/server'
 import { num } from '@/app/util'
 import { Locale } from '@/i18n-config'
 
+import { cache } from 'react'
+import 'server-only'
+ 
+export const preload = (lang: Locale) => {
+  void getItems(lang)
+}
+ 
+export const getItems = cache(localItems)
+
 export async function localItems (lang: Locale) {
   const data = {
     cr: await serverMaster<CraftRecipe>(lang, 'craft_recipe'),

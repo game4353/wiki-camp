@@ -4,6 +4,15 @@ import { STATS, num } from '@/app/util'
 import { serverMaster } from '@/app/master/server'
 import type { FilterItem } from '@/app/component/filter'
 
+import { cache } from 'react'
+import 'server-only'
+ 
+export const preload = (lang: Locale) => {
+  void getItems(lang)
+}
+ 
+export const getItems = cache(localItems)
+
 export async function localItems (lang: Locale) {
   const data = {
     camp_friendship: await serverMaster<CampFriendship>(

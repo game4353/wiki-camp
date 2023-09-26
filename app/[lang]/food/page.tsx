@@ -1,7 +1,11 @@
 import { Locale } from '@/i18n-config'
-import { localItems } from './item'
+import { getItems } from './item'
 import { ClientComponent } from './client'
 import { filterProp } from './filter'
+
+export async function generateStaticParams () {
+  return [{ lang: 'ja' }]
+}
 
 export default async function ServerComponent ({
   params: { lang },
@@ -10,8 +14,6 @@ export default async function ServerComponent ({
   params: { lang: Locale }
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
-  const items = await localItems(lang)
-  return (
-    <ClientComponent lang={lang} items={items} filterProp={filterProp}/>
-  )
+  const items = await getItems(lang)
+  return <ClientComponent lang={lang} items={items} filterProp={filterProp} />
 }

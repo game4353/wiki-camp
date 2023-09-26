@@ -11,7 +11,8 @@ import type {
   CampTemperature,
   Member
 } from '@/app/master/main'
-import { kitSkillMission, kitType } from '@/app/component/filter/kits'
+import { kitRare, kitSkillMission, kitType } from '@/app/component/filter/kits'
+import { getItems } from './item'
 
 export async function getFilterProps (lang: Locale): Promise<FilterProp> {
   const temp = await serverMaster<CampTemperature>(lang, 'camp_temperature')
@@ -19,10 +20,20 @@ export async function getFilterProps (lang: Locale): Promise<FilterProp> {
   const location = await serverMaster<CampLocation>(lang, 'camp_location')
   const member = await serverMaster<Member>(lang, 'member')
   const textMap = await serverText(lang)
+
+  const items = await getItems(lang)
+  const value1s = [...new Set(items.map(item => item.filters.value1))].sort(
+    (a, b) => a - b
+  )
+  const value2s = [...new Set(items.map(item => item.filters.value2))].sort(
+    (a, b) => a - b
+  )
+
   return [
     {
       title: 'Skill',
       kits: [
+        kitRare(textMap),
         kitSkillMission(textMap),
         kitType(textMap),
         {
@@ -49,17 +60,37 @@ export async function getFilterProps (lang: Locale): Promise<FilterProp> {
           ]
         },
         {
-          subtitle: 'phase',
+          subtitle: 'Value',
+          filterKey: 'value1',
+          v: value1s.map(v =>
+            defaultOption({
+              name: v === 0 ? '❌' : v,
+              value: v
+            })
+          )
+        },
+        {
+          subtitle: 'Value %',
+          filterKey: 'value2',
+          v: value2s.map(v =>
+            defaultOption({
+              name: v === 0 ? '❌' : `${v}%`,
+              value: v
+            })
+          )
+        },
+        {
+          subtitle: 'Phase',
+          filterKey: 'phase',
           v: [1, 2, 3].map(v =>
             defaultOption({
               name: textMap('CampText', 50000 + v),
               value: v
             })
-          ),
-          filterKey: 'phase'
+          )
         },
         {
-          subtitle: 'leader',
+          subtitle: 'Leader',
           filterKey: 'leader',
           v: [
             defaultOption({
@@ -78,7 +109,7 @@ export async function getFilterProps (lang: Locale): Promise<FilterProp> {
           ]
         },
         {
-          subtitle: 'area',
+          subtitle: 'Area',
           filterKey: 'area',
           v: [
             defaultOption({
@@ -94,7 +125,7 @@ export async function getFilterProps (lang: Locale): Promise<FilterProp> {
           ]
         },
         {
-          subtitle: 'location',
+          subtitle: 'Location',
           filterKey: 'location',
           v: [
             defaultOption({
@@ -110,7 +141,7 @@ export async function getFilterProps (lang: Locale): Promise<FilterProp> {
           ]
         },
         {
-          subtitle: 'season',
+          subtitle: 'Season',
           filterKey: 'season',
           v: [
             defaultOption({
@@ -136,15 +167,15 @@ export async function getFilterProps (lang: Locale): Promise<FilterProp> {
           ]
         },
         {
-          subtitle: 'temperature',
+          subtitle: 'Temperature',
+          filterKey: 'temperature',
           v: temp.map(o =>
             defaultOption({
               name: textMap('CampText', o.name_text_id),
               value: o.id,
               mode: FilterMode.ENCLOSE
             })
-          ),
-          filterKey: 'temperature'
+          )
         }
       ]
     }
