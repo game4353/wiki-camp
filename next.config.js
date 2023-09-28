@@ -26,7 +26,10 @@ const nextConfig = {
     fileLoaderRule.exclude = /\.svg$/i
 
     return config
-  }
+  },
+  images: {
+    unoptimized: true,
+  },
 }
 
 module.exports = nextConfig
