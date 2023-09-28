@@ -21,13 +21,15 @@ export default function Thumbnail ({
   rid,
   frame,
   rare,
-  type
+  type,
+  unoptimized
 }: {
   bg?: number
   rid: number | string
   frame: number
   rare: 1 | 2 | 3 | 'n' | 'r' | 'sr'
   type?: number
+  unoptimized?: boolean
 }) {
   return (
     <div className='w-16 h-16 relative'>
@@ -41,6 +43,7 @@ export default function Thumbnail ({
         )}
         <Image
           className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+          unoptimized={unoptimized}
           src={`/images/assets/thumbnailn/${rid}.png`}
           alt=''
           width={112}

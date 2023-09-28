@@ -15,6 +15,7 @@ export const localColumns: Column<LocalItem>[] = [
     render (item) {
       return (
         <Thumbnail
+          unoptimized
           bg={item.rare}
           rid={item.rid}
           frame={0}
