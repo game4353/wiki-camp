@@ -1,3 +1,5 @@
+'use client'
+
 import { Locale } from '@/i18n-config'
 import { LocalItem } from './item'
 import { Divider } from '@nextui-org/react'

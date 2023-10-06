@@ -66,7 +66,7 @@ export function FilterBox ({
 
   useEffect(() => {
     Boolean(options.hide) ? initCheckOff(paths) : initCheckOn(paths)
-  }, [])
+  })
 
   return (
     <Checkbox

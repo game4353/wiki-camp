@@ -6,7 +6,7 @@ import {
   initOn,
   initOff
 } from '@/redux/features/checkBoxSlice'
-import { FilterItem, FilterMode, FilterProp } from '.'
+import { FilterItem, FilterMode, FilterMeta } from '.'
 
 export function useCheck () {
   const checkState = useAppSelector(state => state.checkBoxReducer.value)
@@ -52,20 +52,20 @@ function myMemo<T> (key: string, fn: () => T, dep: any[]) {
 
 export function useFiltered<T extends { uid: string | number } & FilterItem> (
   items: T[],
-  filterProp: FilterProp
+  filterMeta: FilterMeta
 ) {
   const { getCheck } = useCheck()
 
   let bools = items.map(_ => true)
-  for (const fp of filterProp) {
+  for (const fp of filterMeta.cats) {
     fp.kits.forEach(kit => {
-      const paths = [fp.title, kit.filterKey]
+      const paths = [filterMeta.uid, fp.title, kit.filterKey]
       const shows = myMemo(
         paths.join('\\'),
         () =>
           items.map(item =>
             kit.v.some(option => {
-              const paths = [fp.title, kit.filterKey, option.uid]
+              const paths = [filterMeta.uid, fp.title, kit.filterKey, option.uid]
               const check = getCheck(paths)
               const itemValueObj = item.filters[fp.title]
               if (itemValueObj == null) return true
@@ -123,7 +123,7 @@ export function useFiltered<T extends { uid: string | number } & FilterItem> (
           ),
         [
           items,
-          filterProp,
+          filterMeta,
           Object.entries(getCheck(paths) ?? {})
             .filter(([_, v]) => v === true)
             .map(([k, _]) => k)

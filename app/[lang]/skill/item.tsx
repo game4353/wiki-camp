@@ -93,6 +93,7 @@ export async function localItems (lang: Locale) {
     } satisfies FilterItem['filters']
 
     return {
+      lang,
       uid: o.id,
       filters,
       sgid,

@@ -2,7 +2,7 @@ import type { Locale } from '@/i18n-config'
 import {
   defaultOption,
   FilterMode,
-  type FilterProp
+  type FilterMeta
 } from '@/app/component/filter'
 import { serverMaster, serverText } from '@/app/master/server'
 import { STATS } from '@/app/util'
@@ -45,84 +45,87 @@ const options = [
   })
 ]
 
-export async function getFilterProps (lang: Locale): Promise<FilterProp> {
+export async function getFilterMeta (lang: Locale): Promise<FilterMeta> {
   const condition = await serverMaster<CampCondition>(lang, 'camp_condition')
   const member = await serverMaster<Member>(lang, 'member')
   const textMap = await serverText(lang)
-  return [
-    {
-      title: 'Event',
-      kits: [
-        ...STATS.map((v, i) => ({
-          subtitle: textMap('CampText', 410001 + i),
-          v: options,
-          filterKey: v
-        })),
-        {
-          subtitle: 'skill PT',
-          v: options,
-          filterKey: 'skillPt'
-        },
-        {
-          subtitle: 'motivation',
-          v: [
-            defaultOption({
-              name: '－',
-              value: 0,
-              mode: FilterMode.LESS
-            }),
-            defaultOption({
-              name: '0',
-              value: 0
-            }),
-            defaultOption({
-              name: '＋',
-              value: 0,
-              mode: FilterMode.GTR
-            })
-          ],
-          filterKey: 'motivation'
-        },
-        {
-          subtitle: 'friendship',
-          filterKey: 'friendship',
-          v: [
-            defaultOption({
-              name: '❌',
-              value: 0,
-              mode: FilterMode.SIZE
-            }),
-            ...[1, 2, 3, 4, 5].map(v =>
+  return {
+    uid: 'event/turn',
+    cats: [
+      {
+        title: 'Event',
+        kits: [
+          ...STATS.map((v, i) => ({
+            subtitle: textMap('CampText', 410001 + i),
+            v: options,
+            filterKey: v
+          })),
+          {
+            subtitle: 'skill PT',
+            v: options,
+            filterKey: 'skillPt'
+          },
+          {
+            subtitle: 'motivation',
+            v: [
               defaultOption({
-                name: textMap(
-                  'MemberText',
-                  member.find(m => m.id === v)!.firstname_text_id
-                ),
-                value: v
+                name: '－',
+                value: 0,
+                mode: FilterMode.LESS
+              }),
+              defaultOption({
+                name: '0',
+                value: 0
+              }),
+              defaultOption({
+                name: '＋',
+                value: 0,
+                mode: FilterMode.GTR
               })
-            )
-          ]
-        },
-        {
-          subtitle: 'condition',
-          filterKey: 'condition',
-          v: [
-            defaultOption({
-              name: '❌',
-              value: 0
-            }),
-            defaultOption({
-              name: '⭕',
-              value: 0,
-              mode: FilterMode.GTR
-            })
-            // ...condition.map(v => defaultOption({
-            //   name: textMap('CampText', v.name_text_id),
-            //   value: v.id
-            // }))
-          ]
-        }
-      ]
-    }
-  ]
+            ],
+            filterKey: 'motivation'
+          },
+          {
+            subtitle: 'friendship',
+            filterKey: 'friendship',
+            v: [
+              defaultOption({
+                name: '❌',
+                value: 0,
+                mode: FilterMode.SIZE
+              }),
+              ...[1, 2, 3, 4, 5].map(v =>
+                defaultOption({
+                  name: textMap(
+                    'MemberText',
+                    member.find(m => m.id === v)!.firstname_text_id
+                  ),
+                  value: v
+                })
+              )
+            ]
+          },
+          {
+            subtitle: 'condition',
+            filterKey: 'condition',
+            v: [
+              defaultOption({
+                name: '❌',
+                value: 0
+              }),
+              defaultOption({
+                name: '⭕',
+                value: 0,
+                mode: FilterMode.GTR
+              })
+              // ...condition.map(v => defaultOption({
+              //   name: textMap('CampText', v.name_text_id),
+              //   value: v.id
+              // }))
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

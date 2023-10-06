@@ -2,23 +2,26 @@ import { Locale } from '@/i18n-config'
 import {
   defaultOption,
   FilterMode,
-  type FilterProp
+  type FilterMeta,
+  type FilterKit
 } from '@/app/component/filter'
 import { serverMaster, serverText } from '@/app/master/server'
 import { num } from '@/app/util'
 import { CampSupportEffectGroup } from '@/app/master/main'
 import { kitRare, kitType } from '@/app/component/filter/kits'
-import { getFilterProps as getEventFP } from '@/app/[lang]/event/turn/filter'
-import { getFilterProps as getSkillFP } from '@/app/[lang]/skill/filter'
+import { getFilterMeta as getEventFM } from '@/app/[lang]/event/turn/filter'
+import { getFilterMeta as getSkillFM } from '@/app/[lang]/skill/filter'
 
-export async function getFilterProps (lang: Locale): Promise<FilterProp> {
+export async function getFilterMeta (lang: Locale): Promise<FilterMeta> {
   const cseg = await serverMaster<CampSupportEffectGroup>(
     lang,
     'camp_support_effect_group'
   )
   const textMap = await serverText(lang)
+  const skillFM = await getSkillFM(lang)
+  const eventFM = await getEventFM(lang)
 
-  const arr: FilterProp[number]['kits'] = []
+  const arr: FilterKit[] = []
 
   Object.values(cseg).forEach(o => {
     if (o == null) return
@@ -50,10 +53,13 @@ export async function getFilterProps (lang: Locale): Promise<FilterProp> {
     arr[i1].filterKey = `eff${i1}`
   })
 
-  return [
-    { title: 'General', kits: [kitRare(), kitType(textMap)] },
-    ...(await getSkillFP(lang)),
-    { title: 'Effect', kits: arr },
-    ...(await getEventFP(lang))
-  ]
+  return {
+    uid: 'support',
+    cats: [
+      { title: 'General', kits: [kitRare(), kitType(textMap)] },
+      ...skillFM.cats,
+      { title: 'Effect', kits: arr },
+      ...eventFM.cats
+    ]
+  }
 }

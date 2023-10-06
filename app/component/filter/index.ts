@@ -45,14 +45,21 @@ export type FilterOption = {
   hide?: boolean
 }
 
-export type FilterProp = {
+export type FilterKit = {
+  subtitle: string
+  v: FilterOption[]
+  filterKey: string
+}
+
+type FilterCat = {
   title: string
-  kits: {
-    subtitle: string
-    v: FilterOption[]
-    filterKey: string
-  }[]
-}[]
+  kits: FilterKit[]
+}
+
+export type FilterMeta = {
+  uid: string
+  cats: FilterCat[]
+}
 
 /** [Defaults] 
  * 
