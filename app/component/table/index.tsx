@@ -1,6 +1,6 @@
 import { type Column, useHeaders } from '@/app/[lang]/main'
 import { useState, useMemo } from 'react'
-import type { FilterProp, FilterItem } from '../filter'
+import type { FilterMeta, FilterItem } from '../filter'
 import { MyTabs } from './tab'
 import { MyTable } from './table'
 import type { Locale } from '@/i18n-config'
@@ -14,19 +14,19 @@ export default function MyPage<
 > ({
   lang,
   items,
-  filterProp,
+  filterMeta,
   columns
 }: {
   lang: Locale
   items: T[]
-  filterProp: FilterProp
+  filterMeta: FilterMeta
   columns: Column<T>[]
 }) {
   const { visibleColumns, tableHeader, selectVisibleColumn } =
     useHeaders(columns)
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]))
   const accordionState = useState<Selection>(new Set([]))
-  const filteredItems = useFiltered(items, filterProp)
+  const filteredItems = useFiltered(items, filterMeta)
   const sortedItems = filteredItems
 
   const tableComponent = (
@@ -41,14 +41,14 @@ export default function MyPage<
   )
   const tableSize = items.length
   const filterComponent = (
-    <FilterAccordion filterProp={filterProp} accordionState={accordionState} />
+    <FilterAccordion filterMeta={filterMeta} accordionState={accordionState} />
   )
   const filterSize = filteredItems.length
   const selectedComponent = <WIP/>
   const selectedSize = selectedKeys === 'all' ? items.length : selectedKeys.size
   const settingComponent = useMemo(() => {
     return <div className='flex flex-col gap-4'>{selectVisibleColumn}</div>
-  }, [selectedKeys, visibleColumns])
+  }, [selectedKeys, visibleColumns, selectVisibleColumn])
 
   return (
     <MyTabs
