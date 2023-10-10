@@ -20,7 +20,7 @@ export function ClientComponent ({
   if (!future) items = items.filter(o => o.open * 1000 <= Date.now())
 
   return (
-    <MyPage
+    <MyPage<LocalItem>
       lang={lang}
       items={items}
       filterMeta={filterMeta}
